@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dart Night Olympic Hub</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --card-bg: #1e1e24;
+      --accent: #ff9800;
+      --text: #ffffff;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container { width: 100%; max-width: 900px; }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    h1, h2, h3 { text-align: center; color: var(--accent); }
+    .btn {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 1rem;
+    }
+    .btn:hover { opacity: 0.9; }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      background: #111;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 5px;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid #333; }
+    th { background: #2a2a32; }
+    .rank-1 { color: var(--gold); font-weight: bold; }
+    .rank-2 { color: var(--silver); font-weight: bold; }
+    .rank-3 { color: var(--bronze); font-weight: bold; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎯 Dart Night Hub: Party & Olympics 🏁</h1>
+
+    <!-- ROSTER SETUP -->
+    <div id="roster-card" class="card">
+      <h2>1. Player Roster</h2>
+      <div id="player-inputs">
+        <input type="text" class="player-name" placeholder="Player 1" value="Alice">
+        <input type="text" class="player-name" placeholder="Player 2" value="Bob">
+        <input type="text" class="player-name" placeholder="Player 3" value="Charlie">
+        <input type="text" class="player-name" placeholder="Player 4" value="Dave">
+      </div>
+      <button class="btn" id="add-player-btn" style="background:#444; color:#fff;">+ Add Player</button>
+      <button class="btn" id="start-event-btn">Start Olympic Decathlon 🏅</button>
+    </div>
+
+    <!-- LEADERBOARD / DASHBOARD -->
+    <div id="dashboard-card" class="card hidden">
+      <h2>Overall Leaderboard</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Total Points</th>
+            <th>Events Played</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+
+      <h3 style="margin-top:25px;">Launch Next Event</h3>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button class="btn" onclick="launchGame('Race Track #1')">🏁 Launch Race Track #1</button>
+        <button class="btn" onclick="launchGame('Cricket')" style="background:#2196f3; color:#fff;">🎯 Launch Cricket</button>
+      </div>
+    </div>
+
+    <!-- GAME LAUNCH OVERLAY SIMULATION -->
+    <div id="game-active-card" class="card hidden">
+      <h2 id="active-game-title">Event in Progress</h2>
+      <p style="text-align:center;">[ Your Dart Game Engine Runs Here ]</p>
+      <br>
+      <h3>Simulate Event Finish Placements:</h3>
+      <p style="font-size:0.85rem; text-align:center; color:#aaa;">Select players in finishing order (1st to last):</p>
+      <div id="finish-order-controls"></div>
+      <button class="btn" onclick="completeEvent()">Submit Event Results 🏆</button>
+    </div>
+  </div>
+
+  <script>
+    let players = [];
+    const pointsMap = [10, 7, 5, 3, 2, 1]; // Olympic Grand Prix Points Allocation
+
+    const rosterCard = document.getElementById('roster-card');
+    const dashboardCard = document.getElementById('dashboard-card');
+    const gameActiveCard = document.getElementById('game-active-card');
+    
+    document.getElementById('add-player-btn').addEventListener('click', () => {
+      const container = document.getElementById('player-inputs');
+      const count = container.children.length + 1;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'player-name';
+      input.placeholder = `Player ${count}`;
+      container.appendChild(input);
+    });
+
+    document.getElementById('start-event-btn').addEventListener('click', () => {
+      const inputs = document.querySelectorAll('.player-name');
+      const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
+      if (names.length < 2) return alert('Enter at least 2 players.');
+
+      players = names.map(name => ({
+        name: name,
+        points: 0,
+        eventsPlayed: 0
+      }));
+
+      rosterCard.classList.add('hidden');
+      dashboardCard.classList.remove('hidden');
+      renderLeaderboard();
+    });
+
+    function renderLeaderboard() {
+      // Sort by points descending
+      players.sort((a, b) => b.points - a.points);
+
+      const body = document.getElementById('leaderboard-body');
+      body.innerHTML = '';
+      players.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        let rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
+        tr.innerHTML = `
+          <td class="${rankClass}">#${idx + 1}</td>
+          <td>${p.name}</td>
+          <td><strong>${p.points} pts</strong></td>
+          <td>${p.eventsPlayed}</td>
+        `;
+        body.appendChild(tr);
+      });
+    }
+
+    let currentFinishOrder = [];
+
+    function launchGame(gameName) {
+      document.getElementById('active-game-title').innerText = `Active Event: ${gameName}`;
+      dashboardCard.classList.add('hidden');
+      gameActiveCard.classList.remove('hidden');
+
+      // Populate simulation finish order dropdowns/controls
+      const container = document.getElementById('finish-order-controls');
+      container.innerHTML = '';
+      currentFinishOrder = [...players];
+
+      players.forEach((p, i) => {
+        const div = document.createElement('div');
+        div.style.margin = "5px 0";
+        div.innerHTML = `Placement #${i + 1}: <strong>${p.name}</strong>`;
+        container.appendChild(div);
+      });
+    }
+
+    function completeEvent() {
+      // Award Olympic Grand Prix Points
+      currentFinishOrder.forEach((player, placementIdx) => {
+        const awardedPoints = pointsMap[placementIdx] || 1;
+        const targetPlayer = players.find(p => p.name === player.name);
+        if (targetPlayer) {
+          targetPlayer.points += awardedPoints;
+          targetPlayer.eventsPlayed += 1;
+        }
+      });
+
+      gameActiveCard.classList.add('hidden');
+      dashboardCard.classList.remove('hidden');
+      renderLeaderboard();
+    }
+  </script>
+</body>
+</html>
