@@ -6,25 +6,46 @@
   <title>Dart Night Olympic Hub</title>
   <style>
     :root {
-      --bg: #121212;
+      --bg-color: #121212;
       --card-bg: #1e1e24;
       --accent: #ff9800;
+      --accent-hover: #e08600;
       --text: #ffffff;
+      --text-muted: #aaaaaa;
+      --segment-complete: #4caf50;
       --gold: #ffd700;
       --silver: #c0c0c0;
       --bronze: #cd7f32;
     }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
-    .container { width: 100%; max-width: 900px; }
+
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
     .card {
       background: var(--card-bg);
       padding: 20px;
@@ -32,114 +53,383 @@
       margin-bottom: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
-    h1, h2, h3 { text-align: center; color: var(--accent); }
+
+    .form-group { margin-bottom: 15px; }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background: #111;
+      color: #fff;
+    }
+
     .btn {
       background: var(--accent);
       color: #000;
-      font-weight: bold;
       border: none;
       padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 10px;
-      font-size: 1rem;
-    }
-    .btn:hover { opacity: 0.9; }
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      background: #111;
-      border: 1px solid #444;
-      color: #fff;
       border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      font-size: 1rem;
+      transition: background 0.2s;
+      margin-top: 5px;
     }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { padding: 12px; text-align: center; border-bottom: 1px solid #333; }
+
+    .btn:hover { background: var(--accent-hover); }
+
+    .btn:disabled {
+      background: #555;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .player-input-list {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* HUB TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
     th { background: #2a2a32; }
+
     .rank-1 { color: var(--gold); font-weight: bold; }
     .rank-2 { color: var(--silver); font-weight: bold; }
     .rank-3 { color: var(--bronze); font-weight: bold; }
+
+    /* GAME ENGINE UI STYLES */
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #444;
+      padding-bottom: 10px;
+    }
+
+    .active-player-banner {
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      background: #333;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      color: #ffeb3b;
+      animation: flash 1s infinite alternate;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0.7; transform: scale(1.02); }
+    }
+
+    .track-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .track-segment {
+      flex: 1;
+      background: #444;
+      border: 2px solid #666;
+      border-radius: 8px;
+      padding: 10px 5px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .track-segment.completed {
+      background: var(--segment-complete);
+      border-color: #81c784;
+      box-shadow: 0 0 10px var(--segment-complete);
+    }
+
+    .track-segment .seg-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .track-segment .seg-req {
+      font-size: 0.75rem;
+      color: #ddd;
+    }
+
+    .dart-display-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .dart-display {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .dart-box {
+      width: 70px;
+      height: 40px;
+      border: 2px dashed #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border-radius: 5px;
+      background: #222;
+    }
+
+    .turn-total {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #ffeb3b;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .btn-pad {
+      padding: 12px 5px;
+      font-weight: bold;
+      border-radius: 5px;
+      border: none;
+      background: #444;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .btn-pad:hover { background: #666; }
+
+    .btn-pad.modifier { background: #0288d1; }
+    .btn-pad.modifier.active {
+      background: #00bcd4;
+      box-shadow: 0 0 8px #00bcd4;
+    }
+
+    .btn-pad.color-white { background: #eee; color: #111; }
+    .btn-pad.color-red { background: #d32f2f; color: #fff; }
+    .btn-pad.color-green { background: #388e3c; color: #fff; }
+    .btn-pad.color-black { background: #111; color: #fff; border: 1px solid #555; }
+
+    .btn-pad.action { background: #f57c00; }
+
+    .advance-btn {
+      background: #388e3c;
+      color: white;
+      font-size: 1.1rem;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .advance-btn:hover { background: #2e7d32; }
+
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>🎯 Dart Night Hub: Party & Olympics 🏁</h1>
+    <h1>🎯 Dart Night Olympic Hub 🏁</h1>
 
-    <!-- ROSTER SETUP -->
+    <!-- 1. ROSTER SETUP CARD -->
     <div id="roster-card" class="card">
-      <h2>1. Player Roster</h2>
-      <div id="player-inputs">
-        <input type="text" class="player-name" placeholder="Player 1" value="Alice">
-        <input type="text" class="player-name" placeholder="Player 2" value="Bob">
-        <input type="text" class="player-name" placeholder="Player 3" value="Charlie">
-        <input type="text" class="player-name" placeholder="Player 4" value="Dave">
+      <h2>1. Tournament Setup</h2>
+      <div class="form-group">
+        <label>Players:</label>
+        <div id="player-inputs">
+          <div class="player-input-list"><input type="text" class="player-name" value="Alice"></div>
+          <div class="player-input-list"><input type="text" class="player-name" value="Bob"></div>
+          <div class="player-input-list"><input type="text" class="player-name" value="Charlie"></div>
+        </div>
+        <button type="button" class="btn" id="add-player-btn" style="background:#444; color:#fff;">+ Add Player</button>
       </div>
-      <button class="btn" id="add-player-btn" style="background:#444; color:#fff;">+ Add Player</button>
-      <button class="btn" id="start-event-btn">Start Olympic Decathlon 🏅</button>
+
+      <button class="btn" id="start-tournament-btn">Start Event Olympics 🏅</button>
     </div>
 
-    <!-- LEADERBOARD / DASHBOARD -->
+    <!-- 2. HUB DASHBOARD & STANDINGS -->
     <div id="dashboard-card" class="card hidden">
-      <h2>Overall Leaderboard</h2>
+      <h2>Olympic Standings</h2>
       <table>
         <thead>
           <tr>
             <th>Rank</th>
             <th>Player</th>
-            <th>Total Points</th>
+            <th>Olympic Points</th>
             <th>Events Played</th>
           </tr>
         </thead>
         <tbody id="leaderboard-body"></tbody>
       </table>
 
-      <h3 style="margin-top:25px;">Launch Next Event</h3>
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button class="btn" onclick="launchGame('Race Track #1')">🏁 Launch Race Track #1</button>
-        <button class="btn" onclick="launchGame('Cricket')" style="background:#2196f3; color:#fff;">🎯 Launch Cricket</button>
+      <h3 style="margin-top:25px;">Select Next Event</h3>
+      <div class="form-group" style="margin-top: 10px;">
+        <label for="laps-input">Race Track Target Laps:</label>
+        <input type="number" id="laps-input" min="1" max="10" value="2">
       </div>
+      <button class="btn" onclick="launchRaceTrack()">🏁 Launch Event: Race Track #1</button>
     </div>
 
-    <!-- GAME LAUNCH OVERLAY SIMULATION -->
-    <div id="game-active-card" class="card hidden">
-      <h2 id="active-game-title">Event in Progress</h2>
-      <p style="text-align:center;">[ Your Dart Game Engine Runs Here ]</p>
-      <br>
-      <h3>Simulate Event Finish Placements:</h3>
-      <p style="font-size:0.85rem; text-align:center; color:#aaa;">Select players in finishing order (1st to last):</p>
-      <div id="finish-order-controls"></div>
-      <button class="btn" onclick="completeEvent()">Submit Event Results 🏆</button>
+    <!-- 3. EMBEDDED GAME ENGINE: RACE TRACK #1 -->
+    <div id="racetrack-game-card" class="card hidden">
+      <h2>🏁 Race Track #1 🏁</h2>
+      <div class="game-header">
+        <div>Round: <span id="round-num">1</span></div>
+        <div>Target Laps: <span id="target-laps">2</span></div>
+      </div>
+
+      <div id="active-player-banner" class="active-player-banner">
+        PLAYER 1's TURN
+      </div>
+
+      <h3>Current Lap Progress</h3>
+      <div class="track-container">
+        <div class="track-segment" id="seg-1">
+          <div class="seg-title">Seg 1</div>
+          <div class="seg-req" id="seg-req-1">30 Pts</div>
+        </div>
+        <div class="track-segment" id="seg-2">
+          <div class="seg-title">Seg 2</div>
+          <div class="seg-req" id="seg-req-2">51 Pts</div>
+        </div>
+        <div class="track-segment" id="seg-3">
+          <div class="seg-title">Seg 3</div>
+          <div class="seg-req" id="seg-req-3">75+ Pts</div>
+        </div>
+        <div class="track-segment" id="seg-4">
+          <div class="seg-title">Seg 4</div>
+          <div class="seg-req" id="seg-req-4">Same Color</div>
+        </div>
+        <div class="track-segment" id="seg-5">
+          <div class="seg-title">Seg 5</div>
+          <div class="seg-req" id="seg-req-5">130 (6 Darts)</div>
+        </div>
+        <div class="track-segment" id="seg-6">
+          <div class="seg-title">Seg 6</div>
+          <div class="seg-req" id="seg-req-6">175 (9 Darts)</div>
+        </div>
+      </div>
+
+      <div class="dart-display-container">
+        <div class="dart-display">
+          <div class="dart-box" id="dart-1">-</div>
+          <div class="dart-box" id="dart-2">-</div>
+          <div class="dart-box" id="dart-3">-</div>
+        </div>
+        <div class="turn-total">Turn Total: <span id="turn-total-score">0</span></div>
+      </div>
+
+      <div class="controls-grid">
+        <button class="btn-pad modifier" id="btn-double">DOUBLE</button>
+        <button class="btn-pad modifier" id="btn-triple">TRIPLE</button>
+        <button class="btn-pad action" id="btn-miss">MISS (0)</button>
+        <button class="btn-pad action" id="btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
+
+        <div id="number-buttons" style="display: contents;"></div>
+
+        <button class="btn-pad color-btn color-white" data-color="white">WHITE</button>
+        <button class="btn-pad color-btn color-red" data-color="red">RED</button>
+        <button class="btn-pad color-btn color-green" data-color="green">GREEN</button>
+        <button class="btn-pad color-btn color-black" data-color="black">BLACK</button>
+      </div>
+
+      <button class="btn advance-btn" id="btn-advance-turn" disabled>Advance Turn ➡️</button>
+
+      <h3 style="margin-top:25px;">Current Match Standings</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Laps Completed</th>
+            <th>Current Segment</th>
+            <th>Total Rounds</th>
+          </tr>
+        </thead>
+        <tbody id="scoreboard-body"></tbody>
+      </table>
     </div>
+
+    <!-- 4. EVENT OVERLAY REWARD SCREEN -->
+    <div id="event-result-card" class="card hidden">
+      <h2>🏆 Event Finished! 🏆</h2>
+      <div id="event-winner-announcement" style="text-align: center; font-size: 1.5rem; margin: 15px 0; color: #ffeb3b;"></div>
+      
+      <h3>Event Placements & Awarded Olympic Points</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Placement</th>
+            <th>Player</th>
+            <th>Grand Prix Points</th>
+          </tr>
+        </thead>
+        <tbody id="event-points-body"></tbody>
+      </table>
+      <br>
+      <button class="btn" onclick="returnToDashboard()">Return to Hub Standings 📊</button>
+    </div>
+
   </div>
 
   <script>
-    let players = [];
-    const pointsMap = [10, 7, 5, 3, 2, 1]; // Olympic Grand Prix Points Allocation
+    /* ==========================================================
+       HUB STATE & MANAGEMENT
+       ========================================================== */
+    let tournamentPlayers = []; // { name, points, eventsPlayed }
+    const pointsMap = [10, 7, 5, 3, 2, 1]; // Points awarded by placement
 
     const rosterCard = document.getElementById('roster-card');
     const dashboardCard = document.getElementById('dashboard-card');
-    const gameActiveCard = document.getElementById('game-active-card');
-    
+    const racetrackGameCard = document.getElementById('racetrack-game-card');
+    const eventResultCard = document.getElementById('event-result-card');
+
     document.getElementById('add-player-btn').addEventListener('click', () => {
       const container = document.getElementById('player-inputs');
       const count = container.children.length + 1;
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'player-name';
-      input.placeholder = `Player ${count}`;
-      container.appendChild(input);
+      const div = document.createElement('div');
+      div.className = 'player-input-list';
+      div.innerHTML = `<input type="text" class="player-name" value="Player ${count}">`;
+      container.appendChild(div);
     });
 
-    document.getElementById('start-event-btn').addEventListener('click', () => {
+    document.getElementById('start-tournament-btn').addEventListener('click', () => {
       const inputs = document.querySelectorAll('.player-name');
       const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
-      if (names.length < 2) return alert('Enter at least 2 players.');
+      if (names.length < 2) return alert('Please enter at least 2 players.');
 
-      players = names.map(name => ({
+      tournamentPlayers = names.map(name => ({
         name: name,
         points: 0,
         eventsPlayed: 0
@@ -147,16 +437,16 @@
 
       rosterCard.classList.add('hidden');
       dashboardCard.classList.remove('hidden');
-      renderLeaderboard();
+      renderHubLeaderboard();
     });
 
-    function renderLeaderboard() {
-      // Sort by points descending
-      players.sort((a, b) => b.points - a.points);
+    function renderHubLeaderboard() {
+      // Sort by Olympic points descending
+      tournamentPlayers.sort((a, b) => b.points - a.points);
 
       const body = document.getElementById('leaderboard-body');
       body.innerHTML = '';
-      players.forEach((p, idx) => {
+      tournamentPlayers.forEach((p, idx) => {
         const tr = document.createElement('tr');
         let rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
         tr.innerHTML = `
@@ -169,40 +459,368 @@
       });
     }
 
-    let currentFinishOrder = [];
+    function onEventFinished(sortedFinalResults) {
+      racetrackGameCard.classList.add('hidden');
+      eventResultCard.classList.remove('hidden');
 
-    function launchGame(gameName) {
-      document.getElementById('active-game-title').innerText = `Active Event: ${gameName}`;
-      dashboardCard.classList.add('hidden');
-      gameActiveCard.classList.remove('hidden');
+      document.getElementById('event-winner-announcement').innerText = `Winner: ${sortedFinalResults[0].name}!`;
 
-      // Populate simulation finish order dropdowns/controls
-      const container = document.getElementById('finish-order-controls');
-      container.innerHTML = '';
-      currentFinishOrder = [...players];
+      const pointsBody = document.getElementById('event-points-body');
+      pointsBody.innerHTML = '';
 
-      players.forEach((p, i) => {
-        const div = document.createElement('div');
-        div.style.margin = "5px 0";
-        div.innerHTML = `Placement #${i + 1}: <strong>${p.name}</strong>`;
-        container.appendChild(div);
+      sortedFinalResults.forEach((result, idx) => {
+        const ptsAwarded = pointsMap[idx] || 1;
+        
+        // Update tournament state
+        const playerObj = tournamentPlayers.find(p => p.name === result.name);
+        if (playerObj) {
+          playerObj.points += ptsAwarded;
+          playerObj.eventsPlayed += 1;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>#${idx + 1}</td>
+          <td>${result.name}</td>
+          <td><strong>+${ptsAwarded} pts</strong></td>
+        `;
+        pointsBody.appendChild(tr);
       });
     }
 
-    function completeEvent() {
-      // Award Olympic Grand Prix Points
-      currentFinishOrder.forEach((player, placementIdx) => {
-        const awardedPoints = pointsMap[placementIdx] || 1;
-        const targetPlayer = players.find(p => p.name === player.name);
-        if (targetPlayer) {
-          targetPlayer.points += awardedPoints;
-          targetPlayer.eventsPlayed += 1;
+    function returnToDashboard() {
+      eventResultCard.classList.add('hidden');
+      dashboardCard.classList.remove('hidden');
+      renderHubLeaderboard();
+    }
+
+    /* ==========================================================
+       EMBEDDED GAME ENGINE: RACE TRACK #1
+       ========================================================== */
+    let totalLaps = 2;
+    let players = [];
+    let currentPlayerIndex = 0;
+    let currentRound = 1;
+    let historyStack = [];
+
+    let isDouble = false;
+    let isTriple = false;
+
+    const numberButtonsContainer = document.getElementById('number-buttons');
+    const activePlayerBanner = document.getElementById('active-player-banner');
+    const roundNumDisplay = document.getElementById('round-num');
+    const targetLapsDisplay = document.getElementById('target-laps');
+    const turnTotalScoreDisplay = document.getElementById('turn-total-score');
+    
+    const btnDouble = document.getElementById('btn-double');
+    const btnTriple = document.getElementById('btn-triple');
+    const btnMiss = document.getElementById('btn-miss');
+    const btnUndo = document.getElementById('btn-undo');
+    const btnAdvanceTurn = document.getElementById('btn-advance-turn');
+    const colorButtons = document.querySelectorAll('.color-btn');
+
+    // Build number pad
+    for (let i = 1; i <= 20; i++) createNumButton(i, i.toString());
+    createNumButton(50, 'BULL');
+
+    function createNumButton(val, label) {
+      const btn = document.createElement('button');
+      btn.className = 'btn-pad num-btn';
+      btn.innerText = label;
+      btn.dataset.value = val;
+      btn.addEventListener('click', () => handleDartInput({ type: 'number', value: val }));
+      numberButtonsContainer.appendChild(btn);
+    }
+
+    function launchRaceTrack() {
+      totalLaps = parseInt(document.getElementById('laps-input').value) || 2;
+      targetLapsDisplay.innerText = totalLaps;
+
+      // Map current hub roster directly into game
+      players = tournamentPlayers.map(tp => ({
+        name: tp.name,
+        laps: 0,
+        segment: 1,
+        segmentProgress: 0,
+        segmentDartsThrown: 0,
+        colorTracker: null,
+        roundsCount: 1,
+        currentTurnDarts: [],
+        currentTurnScores: [],
+        completedSegmentThisTurn: false
+      }));
+
+      currentPlayerIndex = 0;
+      currentRound = 1;
+      historyStack = [];
+
+      dashboardCard.classList.add('hidden');
+      racetrackGameCard.classList.remove('hidden');
+
+      updateGameUI();
+    }
+
+    btnDouble.addEventListener('click', () => {
+      isDouble = !isDouble;
+      if (isDouble) isTriple = false;
+      updateModifierUI();
+    });
+
+    btnTriple.addEventListener('click', () => {
+      isTriple = !isTriple;
+      if (isTriple) isDouble = false;
+      updateModifierUI();
+    });
+
+    function updateModifierUI() {
+      btnDouble.classList.toggle('active', isDouble);
+      btnTriple.classList.toggle('active', isTriple);
+    }
+
+    function resetModifiers() {
+      isDouble = false;
+      isTriple = false;
+      updateModifierUI();
+    }
+
+    colorButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        handleDartInput({ type: 'color', value: btn.dataset.color });
+      });
+    });
+
+    btnMiss.addEventListener('click', () => handleDartInput({ type: 'miss', value: 0 }));
+    btnUndo.addEventListener('click', undoLastAction);
+    btnAdvanceTurn.addEventListener('click', advanceTurn);
+
+    function handleDartInput(dart) {
+      const p = players[currentPlayerIndex];
+      if (p.currentTurnDarts.length >= 3) return;
+
+      saveState();
+
+      let score = 0;
+      let dartText = 'MISS';
+
+      if (dart.type === 'number') {
+        let mult = 1;
+        let multPrefix = '';
+
+        if (dart.value === 50) {
+          mult = 1;
+          dartText = 'BULL';
+        } else {
+          if (isDouble) { mult = 2; multPrefix = 'D'; }
+          if (isTriple) { mult = 3; multPrefix = 'T'; }
+          dartText = multPrefix + dart.value;
         }
+
+        score = dart.value * mult;
+      } else if (dart.type === 'color') {
+        dartText = dart.value.toUpperCase();
+      }
+
+      p.currentTurnDarts.push(dartText);
+      p.currentTurnScores.push(score);
+
+      processSegmentProgress(p, dart, score);
+      resetModifiers();
+      updateGameUI();
+    }
+
+    function processSegmentProgress(p, dart, score) {
+      const seg = p.segment;
+
+      if (seg === 1) { // EXACT 30
+        if (dart.type === 'number') {
+          p.segmentProgress += score;
+          if (p.segmentProgress === 30) advanceSegment(p);
+          else if (p.segmentProgress > 30) p.segmentProgress = 0;
+        }
+      } 
+      else if (seg === 2) { // EXACT 51
+        if (dart.type === 'number') {
+          p.segmentProgress += score;
+          if (p.segmentProgress === 51) advanceSegment(p);
+          else if (p.segmentProgress > 51) p.segmentProgress = 0;
+        }
+      } 
+      else if (seg === 3) { // 75+ Total
+        if (dart.type === 'number') {
+          p.segmentProgress += score;
+          if (p.segmentProgress >= 75) advanceSegment(p);
+        }
+      } 
+      else if (seg === 4) { // 3 Same Color
+        if (dart.type === 'color') {
+          const selectedColor = dart.value.toLowerCase();
+          if (!p.colorTracker || p.colorTracker !== selectedColor) {
+            p.colorTracker = selectedColor;
+            p.segmentProgress = 1;
+          } else {
+            p.segmentProgress += 1;
+          }
+
+          if (p.segmentProgress >= 3) advanceSegment(p);
+        } else if (dart.type === 'miss') {
+          p.colorTracker = null;
+          p.segmentProgress = 0;
+        }
+      } 
+      else if (seg === 5) { // 130 EXACT in 6 Darts
+        p.segmentDartsThrown += 1;
+        if (dart.type === 'number') p.segmentProgress += score;
+
+        if (p.segmentProgress === 130) advanceSegment(p);
+        else if (p.segmentProgress > 130 || p.segmentDartsThrown >= 6) {
+          p.segmentProgress = 0;
+          p.segmentDartsThrown = 0;
+        }
+      } 
+      else if (seg === 6) { // 175 EXACT in 9 Darts
+        p.segmentDartsThrown += 1;
+        if (dart.type === 'number') p.segmentProgress += score;
+
+        if (p.segmentProgress === 175) advanceSegment(p);
+        else if (p.segmentProgress > 175 || p.segmentDartsThrown >= 9) {
+          p.segmentProgress = 0;
+          p.segmentDartsThrown = 0;
+        }
+      }
+    }
+
+    function advanceSegment(p) {
+      p.segment += 1;
+      p.segmentProgress = 0;
+      p.segmentDartsThrown = 0;
+      p.colorTracker = null;
+      p.completedSegmentThisTurn = true;
+
+      if (p.segment > 6) {
+        p.laps += 1;
+        p.segment = 1;
+        if (p.laps >= totalLaps) {
+          endGame();
+          return;
+        }
+      }
+    }
+
+    function advanceTurn() {
+      const p = players[currentPlayerIndex];
+
+      if (!p.completedSegmentThisTurn) {
+        if (p.segment === 1 && p.segmentProgress !== 30) p.segmentProgress = 0;
+        if (p.segment === 2 && p.segmentProgress !== 51) p.segmentProgress = 0;
+        if (p.segment === 3 && p.segmentProgress < 75) p.segmentProgress = 0;
+      }
+
+      p.currentTurnDarts = [];
+      p.currentTurnScores = [];
+      p.completedSegmentThisTurn = false;
+      p.roundsCount += 1;
+
+      currentPlayerIndex++;
+      if (currentPlayerIndex >= players.length) {
+        currentPlayerIndex = 0;
+        currentRound++;
+      }
+
+      updateGameUI();
+    }
+
+    function saveState() {
+      historyStack.push(JSON.stringify({
+        players, currentPlayerIndex, currentRound, isDouble, isTriple
+      }));
+    }
+
+    function undoLastAction() {
+      if (historyStack.length === 0) return;
+      const state = JSON.parse(historyStack.pop());
+      players = state.players;
+      currentPlayerIndex = state.currentPlayerIndex;
+      currentRound = state.currentRound;
+      isDouble = state.isDouble;
+      isTriple = state.isTriple;
+
+      updateModifierUI();
+      updateGameUI();
+    }
+
+    function updateGameUI() {
+      const p = players[currentPlayerIndex];
+
+      activePlayerBanner.innerText = `${p.name.toUpperCase()}'S TURN (SEGMENT ${p.segment})`;
+      roundNumDisplay.innerText = currentRound;
+
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById(`dart-${i}`).innerText = p.currentTurnDarts[i - 1] || '-';
+      }
+
+      const totalTurnScore = p.currentTurnScores.reduce((a, b) => a + b, 0);
+      turnTotalScoreDisplay.innerText = totalTurnScore;
+
+      const turnComplete = p.currentTurnDarts.length === 3 || p.completedSegmentThisTurn;
+      btnAdvanceTurn.disabled = !turnComplete;
+
+      document.getElementById('seg-req-1').innerText = p.segment === 1 ? `Rem: ${30 - p.segmentProgress}` : `30 Pts`;
+      document.getElementById('seg-req-2').innerText = p.segment === 2 ? `Rem: ${51 - p.segmentProgress}` : `51 Pts`;
+      document.getElementById('seg-req-3').innerText = p.segment === 3 ? `Rem: ${75 - p.segmentProgress}` : `75+ Pts`;
+      document.getElementById('seg-req-5').innerText = p.segment === 5 ? `Rem: ${130 - p.segmentProgress}` : `130 (6 Darts)`;
+      document.getElementById('seg-req-6').innerText = p.segment === 6 ? `Rem: ${175 - p.segmentProgress}` : `175 (9 Darts)`;
+
+      for (let i = 1; i <= 6; i++) {
+        const segEl = document.getElementById(`seg-${i}`);
+        segEl.classList.toggle('completed', i < p.segment);
+      }
+
+      const isSeg4 = (p.segment === 4);
+      document.querySelectorAll('.num-btn').forEach(btn => btn.disabled = isSeg4 || turnComplete);
+      btnDouble.disabled = isSeg4 || turnComplete;
+      btnTriple.disabled = isSeg4 || turnComplete;
+      btnMiss.disabled = turnComplete;
+
+      colorButtons.forEach(btn => {
+        btn.disabled = !isSeg4 || turnComplete;
+        btn.style.opacity = (isSeg4 && !turnComplete) ? '1' : '0.2';
       });
 
-      gameActiveCard.classList.add('hidden');
-      dashboardCard.classList.remove('hidden');
-      renderLeaderboard();
+      const scoreboardBody = document.getElementById('scoreboard-body');
+      scoreboardBody.innerHTML = '';
+      players.forEach((player, idx) => {
+        const tr = document.createElement('tr');
+        if (idx === currentPlayerIndex) tr.style.background = '#333';
+        tr.innerHTML = `
+          <td>${player.name} ${idx === currentPlayerIndex ? '🎯' : ''}</td>
+          <td>${player.laps} / ${totalLaps}</td>
+          <td>Seg ${player.segment} (${getProgString(player)})</td>
+          <td>${player.roundsCount - 1}</td>
+        `;
+        scoreboardBody.appendChild(tr);
+      });
+    }
+
+    function getProgString(p) {
+      if (p.segment === 1) return `Rem: ${30 - p.segmentProgress} pts`;
+      if (p.segment === 2) return `Rem: ${51 - p.segmentProgress} pts`;
+      if (p.segment === 3) return `Rem: ${75 - p.segmentProgress} pts`;
+      if (p.segment === 4) return `${p.segmentProgress}/3 same`;
+      if (p.segment === 5) return `Rem: ${130 - p.segmentProgress} (${6 - p.segmentDartsThrown} left)`;
+      if (p.segment === 6) return `Rem: ${175 - p.segmentProgress} (${9 - p.segmentDartsThrown} left)`;
+      return `${p.segmentProgress} pts`;
+    }
+
+    function endGame() {
+      // Sort players by final placement
+      const sorted = [...players].sort((a, b) => {
+        if (b.laps !== a.laps) return b.laps - a.laps;
+        if (b.segment !== a.segment) return b.segment - a.segment;
+        return a.roundsCount - b.roundsCount;
+      });
+
+      // Pass final results back to the Hub callback
+      onEventFinished(sorted);
     }
   </script>
 </body>
