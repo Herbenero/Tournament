@@ -157,6 +157,7 @@
       
       <label for="event-select">Active Event:</label>
       <select id="event-select">
+        <option value="baseball">⚾ Baseball Darts</option>
         <option value="roman-empire">🏛️ Roman Empire</option>
         <option value="robin-hood">🎯 Robin Hood</option>
         <option value="race-track-1">🏁 Race Track #1</option>
@@ -171,7 +172,7 @@
       <button class="btn" onclick="launchEvent()">Launch Event</button>
     </div>
 
-    <!-- 2. EXTERNAL EMBED VIEW (ROMAN EMPIRE, ROBIN HOOD, ETC.) -->
+    <!-- 2. EXTERNAL EMBED VIEW (BASEBALL, ROMAN EMPIRE, ROBIN HOOD, ETC.) -->
     <div id="external-game-card" class="card hidden">
       <div class="flex-row" style="margin-bottom: 15px;">
         <button class="btn btn-secondary" onclick="returnToDashboard()">← Return to Olympic Hub</button>
@@ -200,6 +201,11 @@
   <script>
     // Event Configuration Mapping
     const EVENT_CONFIG = {
+      "baseball": {
+        name: "Baseball Darts",
+        type: "iframe",
+        url: "https://herbenero.github.io/Baseball/"
+      },
       "roman-empire": {
         name: "Roman Empire",
         type: "iframe",
