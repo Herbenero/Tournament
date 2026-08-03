@@ -131,7 +131,7 @@
 
     iframe.game-frame {
       width: 100%;
-      height: 700px;
+      height: 750px;
       border: 1px solid var(--border);
       border-radius: 8px;
       background: #000;
@@ -172,7 +172,7 @@
       <button class="btn" onclick="launchEvent()">Launch Event</button>
     </div>
 
-    <!-- 2. EXTERNAL EMBED VIEW (BASEBALL, ROMAN EMPIRE, ROBIN HOOD, ETC.) -->
+    <!-- 2. EMBEDDED EVENT VIEW -->
     <div id="external-game-card" class="card hidden">
       <div class="flex-row" style="margin-bottom: 15px;">
         <button class="btn btn-secondary" onclick="returnToDashboard()">← Return to Olympic Hub</button>
@@ -199,7 +199,7 @@
   </div>
 
   <script>
-    // Event Configuration Mapping
+    // All Games Mapped and Set to Active 'iframe' Launchers
     const EVENT_CONFIG = {
       "baseball": {
         name: "Baseball Darts",
@@ -218,38 +218,38 @@
       },
       "race-track-1": {
         name: "Race Track #1",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Race-Track-1/"
       },
       "golf": {
         name: "Golf Darts",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Golf-Darts/"
       },
       "shove-a-penny": {
         name: "Shove a Penny",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Shove-A-Penny/"
       },
       "tennis-darts": {
         name: "Tennis Darts",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Tennis-Darts/"
       },
       "all-fives": {
         name: "All 5's",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/All-Fives/"
       },
       "basketball": {
         name: "Basketball Darts",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Basketball-Darts/"
       },
       "count-up": {
         name: "Count Up",
-        type: "internal",
-        url: "#"
+        type: "iframe",
+        url: "https://herbenero.github.io/Count-Up/"
       }
     };
 
@@ -259,20 +259,16 @@
 
       if (!eventData) return;
 
-      if (eventData.type === "iframe") {
-        document.getElementById("dashboard-card").classList.add("hidden");
-        document.getElementById("standings-card").classList.add("hidden");
-        
-        const frame = document.getElementById("game-frame");
-        const externalLink = document.getElementById("open-external-link");
-        
-        frame.src = eventData.url;
-        externalLink.href = eventData.url;
-        
-        document.getElementById("external-game-card").classList.remove("hidden");
-      } else {
-        alert("Launching local event: " + eventData.name);
-      }
+      document.getElementById("dashboard-card").classList.add("hidden");
+      document.getElementById("standings-card").classList.add("hidden");
+      
+      const frame = document.getElementById("game-frame");
+      const externalLink = document.getElementById("open-external-link");
+      
+      frame.src = eventData.url;
+      externalLink.href = eventData.url;
+      
+      document.getElementById("external-game-card").classList.remove("hidden");
     }
 
     function returnToDashboard() {
