@@ -54,7 +54,9 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
-    .form-group { margin-bottom: 15px; }
+    .form-group {
+      margin-bottom: 15px;
+    }
 
     label {
       display: block;
@@ -62,7 +64,7 @@
       font-weight: bold;
     }
 
-    input[type="text"], input[type="number"] {
+    input[type="text"], input[type="number"], select {
       width: 100%;
       padding: 10px;
       border-radius: 5px;
@@ -85,7 +87,9 @@
       margin-top: 5px;
     }
 
-    .btn:hover { background: var(--accent-hover); }
+    .btn:hover {
+      background: var(--accent-hover);
+    }
 
     .btn:disabled {
       background: #555;
@@ -112,7 +116,9 @@
       border-bottom: 1px solid #333;
     }
 
-    th { background: #2a2a32; }
+    th {
+      background: #2a2a32;
+    }
 
     .rank-1 { color: var(--gold); font-weight: bold; }
     .rank-2 { color: var(--silver); font-weight: bold; }
@@ -231,18 +237,12 @@
     }
 
     .btn-pad:hover { background: #666; }
-
     .btn-pad.modifier { background: #0288d1; }
-    .btn-pad.modifier.active {
-      background: #00bcd4;
-      box-shadow: 0 0 8px #00bcd4;
-    }
-
+    .btn-pad.modifier.active { background: #00bcd4; box-shadow: 0 0 8px #00bcd4; }
     .btn-pad.color-white { background: #eee; color: #111; }
     .btn-pad.color-red { background: #d32f2f; color: #fff; }
     .btn-pad.color-green { background: #388e3c; color: #fff; }
     .btn-pad.color-black { background: #111; color: #fff; border: 1px solid #555; }
-
     .btn-pad.action { background: #f57c00; }
 
     .advance-btn {
@@ -259,7 +259,6 @@
   </style>
 </head>
 <body>
-
   <div class="container">
     <h1>🎯 Dart Night Olympic Hub 🏁</h1>
 
@@ -275,7 +274,6 @@
         </div>
         <button type="button" class="btn" id="add-player-btn" style="background:#444; color:#fff;">+ Add Player</button>
       </div>
-
       <button class="btn" id="start-tournament-btn">Start Event Olympics 🏅</button>
     </div>
 
@@ -295,11 +293,23 @@
       </table>
 
       <h3 style="margin-top:25px;">Select Next Event</h3>
+      
+      <!-- Race Track Launch -->
       <div class="form-group" style="margin-top: 10px;">
         <label for="laps-input">Race Track Target Laps:</label>
         <input type="number" id="laps-input" min="1" max="10" value="2">
       </div>
       <button class="btn" onclick="launchRaceTrack()">🏁 Launch Event: Race Track #1</button>
+
+      <!-- Basketball Launch -->
+      <div class="form-group" style="margin-top: 20px;">
+        <label for="bb-board-type">Basketball Board Type:</label>
+        <select id="bb-board-type">
+          <option value="basic">Basic Board (Bull=6, D=5, T=4, Outer=3, Inner=2)</option>
+          <option value="quad">Quad Board (Bull=10, D=9, T=7, Quad=5, Outer=4, Mid=3, Inner=2)</option>
+        </select>
+      </div>
+      <button class="btn" style="background: #2196F3; color: white;" onclick="launchBasketball()">🏀 Launch Event: Basketball Darts</button>
     </div>
 
     <!-- 3. EMBEDDED GAME ENGINE: RACE TRACK #1 -->
@@ -356,9 +366,7 @@
         <button class="btn-pad modifier" id="btn-triple">TRIPLE</button>
         <button class="btn-pad action" id="btn-miss">MISS (0)</button>
         <button class="btn-pad action" id="btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
-
         <div id="number-buttons" style="display: contents;"></div>
-
         <button class="btn-pad color-btn color-white" data-color="white">WHITE</button>
         <button class="btn-pad color-btn color-red" data-color="red">RED</button>
         <button class="btn-pad color-btn color-green" data-color="green">GREEN</button>
@@ -381,6 +389,52 @@
       </table>
     </div>
 
+    <!-- 3.5 EMBEDDED GAME ENGINE: BASKETBALL DARTS -->
+    <div id="basketball-game-card" class="card hidden">
+      <h2>🏀 Basketball Darts 🏀</h2>
+      <div class="game-header">
+        <div>Quarter: <span id="bb-quarter">Q1</span> / 4</div>
+        <div>Possession: <span id="bb-possession">1</span> / 6</div>
+      </div>
+
+      <div id="bb-active-banner" class="active-player-banner">
+        PLAYER 1's TURN
+      </div>
+
+      <div class="dart-display-container">
+        <div class="dart-display">
+          <div class="dart-box" id="bb-dart-1">-</div>
+          <div class="dart-box" id="bb-dart-2">-</div>
+          <div class="dart-box" id="bb-dart-3">-</div>
+        </div>
+        <div class="turn-total">Possession Points: <span id="bb-turn-score">0</span></div>
+      </div>
+
+      <p style="text-align: center; margin-bottom: 8px; font-weight: bold; color: var(--text-muted);">Select Shot Hit:</p>
+      <div class="controls-grid" id="bb-segment-buttons">
+        <!-- Dynamic Basketball Shot Buttons -->
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 15px;">
+        <button class="btn-pad action" id="bb-btn-miss" style="flex:1;">MISS (0)</button>
+        <button class="btn-pad action" id="bb-btn-undo" style="flex:1; background:#d32f2f;">UNDO DART</button>
+      </div>
+
+      <button class="btn advance-btn" id="bb-btn-advance" disabled onclick="advanceBasketballTurn()">Advance Turn ➡️</button>
+
+      <h3 style="margin-top:25px;">Live Match Scoreboard</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Total Points</th>
+            <th>Current Quarter</th>
+          </tr>
+        </thead>
+        <tbody id="bb-scoreboard-body"></tbody>
+      </table>
+    </div>
+
     <!-- 4. EVENT OVERLAY REWARD SCREEN -->
     <div id="event-result-card" class="card hidden">
       <h2>🏆 Event Finished! 🏆</h2>
@@ -400,7 +454,6 @@
       <br>
       <button class="btn" onclick="returnToDashboard()">Return to Hub Standings 📊</button>
     </div>
-
   </div>
 
   <script>
@@ -413,6 +466,7 @@
     const rosterCard = document.getElementById('roster-card');
     const dashboardCard = document.getElementById('dashboard-card');
     const racetrackGameCard = document.getElementById('racetrack-game-card');
+    const basketballGameCard = document.getElementById('basketball-game-card');
     const eventResultCard = document.getElementById('event-result-card');
 
     document.getElementById('add-player-btn').addEventListener('click', () => {
@@ -428,22 +482,15 @@
       const inputs = document.querySelectorAll('.player-name');
       const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
       if (names.length < 2) return alert('Please enter at least 2 players.');
-
-      tournamentPlayers = names.map(name => ({
-        name: name,
-        points: 0,
-        eventsPlayed: 0
-      }));
-
+      
+      tournamentPlayers = names.map(name => ({ name: name, points: 0, eventsPlayed: 0 }));
       rosterCard.classList.add('hidden');
       dashboardCard.classList.remove('hidden');
       renderHubLeaderboard();
     });
 
     function renderHubLeaderboard() {
-      // Sort by Olympic points descending
       tournamentPlayers.sort((a, b) => b.points - a.points);
-
       const body = document.getElementById('leaderboard-body');
       body.innerHTML = '';
       tournamentPlayers.forEach((p, idx) => {
@@ -461,17 +508,15 @@
 
     function onEventFinished(sortedFinalResults) {
       racetrackGameCard.classList.add('hidden');
+      basketballGameCard.classList.add('hidden');
       eventResultCard.classList.remove('hidden');
 
       document.getElementById('event-winner-announcement').innerText = `Winner: ${sortedFinalResults[0].name}!`;
-
       const pointsBody = document.getElementById('event-points-body');
       pointsBody.innerHTML = '';
 
       sortedFinalResults.forEach((result, idx) => {
         const ptsAwarded = pointsMap[idx] || 1;
-        
-        // Update tournament state
         const playerObj = tournamentPlayers.find(p => p.name === result.name);
         if (playerObj) {
           playerObj.points += ptsAwarded;
@@ -498,11 +543,10 @@
        EMBEDDED GAME ENGINE: RACE TRACK #1
        ========================================================== */
     let totalLaps = 2;
-    let players = [];
-    let currentPlayerIndex = 0;
-    let currentRound = 1;
-    let historyStack = [];
-
+    let rtPlayers = [];
+    let rtCurrentPlayerIndex = 0;
+    let rtCurrentRound = 1;
+    let rtHistoryStack = [];
     let isDouble = false;
     let isTriple = false;
 
@@ -511,7 +555,6 @@
     const roundNumDisplay = document.getElementById('round-num');
     const targetLapsDisplay = document.getElementById('target-laps');
     const turnTotalScoreDisplay = document.getElementById('turn-total-score');
-    
     const btnDouble = document.getElementById('btn-double');
     const btnTriple = document.getElementById('btn-triple');
     const btnMiss = document.getElementById('btn-miss');
@@ -536,291 +579,342 @@
       totalLaps = parseInt(document.getElementById('laps-input').value) || 2;
       targetLapsDisplay.innerText = totalLaps;
 
-      // Map current hub roster directly into game
-      players = tournamentPlayers.map(tp => ({
-        name: tp.name,
-        laps: 0,
-        segment: 1,
-        segmentProgress: 0,
-        segmentDartsThrown: 0,
-        colorTracker: null,
-        roundsCount: 1,
-        currentTurnDarts: [],
-        currentTurnScores: [],
-        completedSegmentThisTurn: false
+      rtPlayers = tournamentPlayers.map(p => ({
+        name: p.name,
+        lapsCompleted: 0,
+        currentSegment: 1,
+        totalRounds: 0,
+        currentDarts: [],
+        seg5Darts: 0,
+        seg5Score: 0,
+        seg6Darts: 0,
+        seg6Score: 0,
+        seg4Color: null
       }));
 
-      currentPlayerIndex = 0;
-      currentRound = 1;
-      historyStack = [];
-
+      rtCurrentPlayerIndex = 0;
+      rtCurrentRound = 1;
+      rtHistoryStack = [];
       dashboardCard.classList.add('hidden');
       racetrackGameCard.classList.remove('hidden');
-
-      updateGameUI();
+      updateRTUI();
     }
 
     btnDouble.addEventListener('click', () => {
       isDouble = !isDouble;
       if (isDouble) isTriple = false;
-      updateModifierUI();
+      updateModifiers();
     });
 
     btnTriple.addEventListener('click', () => {
       isTriple = !isTriple;
       if (isTriple) isDouble = false;
-      updateModifierUI();
+      updateModifiers();
     });
 
-    function updateModifierUI() {
+    colorButtons.forEach(btn => {
+      btn.addEventListener('click', () => handleDartInput({ type: 'color', value: btn.dataset.color }));
+    });
+
+    btnMiss.addEventListener('click', () => handleDartInput({ type: 'miss', value: 0 }));
+    btnUndo.addEventListener('click', undoDart);
+    btnAdvanceTurn.addEventListener('click', advanceRTTurn);
+
+    function updateModifiers() {
       btnDouble.classList.toggle('active', isDouble);
       btnTriple.classList.toggle('active', isTriple);
     }
 
-    function resetModifiers() {
+    function handleDartInput(dart) {
+      const p = rtPlayers[rtCurrentPlayerIndex];
+      if (p.currentDarts.length >= 3) return;
+
+      let mult = isDouble ? 2 : isTriple ? 3 : 1;
+      let rawVal = dart.value;
+      let calcScore = dart.type === 'number' ? rawVal * mult : 0;
+
+      const dartObj = { ...dart, multiplier: mult, calculatedScore: calcScore };
+      p.currentDarts.push(dartObj);
+
       isDouble = false;
       isTriple = false;
-      updateModifierUI();
+      updateModifiers();
+      updateRTTurnDisplay();
     }
 
-    colorButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        handleDartInput({ type: 'color', value: btn.dataset.color });
-      });
-    });
+    function undoDart() {
+      const p = rtPlayers[rtCurrentPlayerIndex];
+      if (p.currentDarts.length > 0) {
+        p.currentDarts.pop();
+        updateRTTurnDisplay();
+      }
+    }
 
-    btnMiss.addEventListener('click', () => handleDartInput({ type: 'miss', value: 0 }));
-    btnUndo.addEventListener('click', undoLastAction);
-    btnAdvanceTurn.addEventListener('click', advanceTurn);
+    function updateRTTurnDisplay() {
+      const p = rtPlayers[rtCurrentPlayerIndex];
+      const darts = p.currentDarts;
 
-    function handleDartInput(dart) {
-      const p = players[currentPlayerIndex];
-      if (p.currentTurnDarts.length >= 3) return;
+      document.getElementById('dart-1').innerText = formatDart(darts[0]);
+      document.getElementById('dart-2').innerText = formatDart(darts[1]);
+      document.getElementById('dart-3').innerText = formatDart(darts[2]);
 
-      saveState();
+      const sum = darts.reduce((a, b) => a + (b.calculatedScore || 0), 0);
+      turnTotalScoreDisplay.innerText = sum;
+      btnAdvanceTurn.disabled = darts.length < 3;
+    }
 
-      let score = 0;
-      let dartText = 'MISS';
+    function formatDart(d) {
+      if (!d) return '-';
+      if (d.type === 'miss') return 'MISS';
+      if (d.type === 'color') return d.value.toUpperCase();
+      let prefix = d.multiplier === 2 ? 'D' : d.multiplier === 3 ? 'T' : '';
+      return `${prefix}${d.value}`;
+    }
 
-      if (dart.type === 'number') {
-        let mult = 1;
-        let multPrefix = '';
+    function advanceRTTurn() {
+      const p = rtPlayers[rtCurrentPlayerIndex];
+      p.totalRounds++;
 
-        if (dart.value === 50) {
-          mult = 1;
-          dartText = 'BULL';
-        } else {
-          if (isDouble) { mult = 2; multPrefix = 'D'; }
-          if (isTriple) { mult = 3; multPrefix = 'T'; }
-          dartText = multPrefix + dart.value;
-        }
+      // Evaluate segments...
+      evaluatePlayerSegmentProgress(p);
 
-        score = dart.value * mult;
-      } else if (dart.type === 'color') {
-        dartText = dart.value.toUpperCase();
+      p.currentDarts = [];
+      rtCurrentPlayerIndex++;
+
+      if (rtCurrentPlayerIndex >= rtPlayers.length) {
+        rtCurrentPlayerIndex = 0;
+        rtCurrentRound++;
       }
 
-      p.currentTurnDarts.push(dartText);
-      p.currentTurnScores.push(score);
+      // Check Winner
+      const winner = rtPlayers.find(pl => pl.lapsCompleted >= totalLaps);
+      if (winner) {
+        const sorted = [...rtPlayers].sort((a, b) => {
+          if (b.lapsCompleted !== a.lapsCompleted) return b.lapsCompleted - a.lapsCompleted;
+          if (b.currentSegment !== a.currentSegment) return b.currentSegment - a.currentSegment;
+          return a.totalRounds - b.totalRounds;
+        });
+        onEventFinished(sorted);
+        return;
+      }
 
-      processSegmentProgress(p, dart, score);
-      resetModifiers();
-      updateGameUI();
+      updateRTUI();
     }
 
-    function processSegmentProgress(p, dart, score) {
-      const seg = p.segment;
-
-      if (seg === 1) { // EXACT 30
-        if (dart.type === 'number') {
-          p.segmentProgress += score;
-          if (p.segmentProgress === 30) advanceSegment(p);
-          else if (p.segmentProgress > 30) p.segmentProgress = 0;
-        }
-      } 
-      else if (seg === 2) { // EXACT 51
-        if (dart.type === 'number') {
-          p.segmentProgress += score;
-          if (p.segmentProgress === 51) advanceSegment(p);
-          else if (p.segmentProgress > 51) p.segmentProgress = 0;
-        }
-      } 
-      else if (seg === 3) { // 75+ Total
-        if (dart.type === 'number') {
-          p.segmentProgress += score;
-          if (p.segmentProgress >= 75) advanceSegment(p);
-        }
-      } 
-      else if (seg === 4) { // 3 Same Color
-        if (dart.type === 'color') {
-          const selectedColor = dart.value.toLowerCase();
-          if (!p.colorTracker || p.colorTracker !== selectedColor) {
-            p.colorTracker = selectedColor;
-            p.segmentProgress = 1;
-          } else {
-            p.segmentProgress += 1;
+    function evaluatePlayerSegmentProgress(p) {
+      const darts = p.currentDarts;
+      
+      for (let d of darts) {
+        if (p.currentSegment === 1) {
+          if (d.calculatedScore >= 30) advanceSegment(p);
+        } else if (p.currentSegment === 2) {
+          if (d.calculatedScore === 51) advanceSegment(p);
+        } else if (p.currentSegment === 3) {
+          if (d.calculatedScore >= 75) advanceSegment(p);
+        } else if (p.currentSegment === 4) {
+          if (d.type === 'color') {
+            if (!p.seg4Color) p.seg4Color = d.value;
+            else if (p.seg4Color === d.value) advanceSegment(p);
           }
-
-          if (p.segmentProgress >= 3) advanceSegment(p);
-        } else if (dart.type === 'miss') {
-          p.colorTracker = null;
-          p.segmentProgress = 0;
-        }
-      } 
-      else if (seg === 5) { // 130 EXACT in 6 Darts
-        p.segmentDartsThrown += 1;
-        if (dart.type === 'number') p.segmentProgress += score;
-
-        if (p.segmentProgress === 130) advanceSegment(p);
-        else if (p.segmentProgress > 130 || p.segmentDartsThrown >= 6) {
-          p.segmentProgress = 0;
-          p.segmentDartsThrown = 0;
-        }
-      } 
-      else if (seg === 6) { // 175 EXACT in 9 Darts
-        p.segmentDartsThrown += 1;
-        if (dart.type === 'number') p.segmentProgress += score;
-
-        if (p.segmentProgress === 175) advanceSegment(p);
-        else if (p.segmentProgress > 175 || p.segmentDartsThrown >= 9) {
-          p.segmentProgress = 0;
-          p.segmentDartsThrown = 0;
+        } else if (p.currentSegment === 5) {
+          p.seg5Darts++;
+          p.seg5Score += d.calculatedScore;
+          if (p.seg5Score >= 130 && p.seg5Darts <= 6) advanceSegment(p);
+          else if (p.seg5Darts >= 6) { p.seg5Darts = 0; p.seg5Score = 0; }
+        } else if (p.currentSegment === 6) {
+          p.seg6Darts++;
+          p.seg6Score += d.calculatedScore;
+          if (p.seg6Score >= 175 && p.seg6Darts <= 9) {
+            p.lapsCompleted++;
+            p.currentSegment = 1;
+            p.seg6Darts = 0;
+            p.seg6Score = 0;
+          } else if (p.seg6Darts >= 9) { p.seg6Darts = 0; p.seg6Score = 0; }
         }
       }
     }
 
     function advanceSegment(p) {
-      p.segment += 1;
-      p.segmentProgress = 0;
-      p.segmentDartsThrown = 0;
-      p.colorTracker = null;
-      p.completedSegmentThisTurn = true;
-
-      if (p.segment > 6) {
-        p.laps += 1;
-        p.segment = 1;
-        if (p.laps >= totalLaps) {
-          endGame();
-          return;
-        }
-      }
+      p.currentSegment++;
+      p.seg4Color = null;
+      p.seg5Darts = 0; p.seg5Score = 0;
     }
 
-    function advanceTurn() {
-      const p = players[currentPlayerIndex];
-
-      if (!p.completedSegmentThisTurn) {
-        if (p.segment === 1 && p.segmentProgress !== 30) p.segmentProgress = 0;
-        if (p.segment === 2 && p.segmentProgress !== 51) p.segmentProgress = 0;
-        if (p.segment === 3 && p.segmentProgress < 75) p.segmentProgress = 0;
-      }
-
-      p.currentTurnDarts = [];
-      p.currentTurnScores = [];
-      p.completedSegmentThisTurn = false;
-      p.roundsCount += 1;
-
-      currentPlayerIndex++;
-      if (currentPlayerIndex >= players.length) {
-        currentPlayerIndex = 0;
-        currentRound++;
-      }
-
-      updateGameUI();
-    }
-
-    function saveState() {
-      historyStack.push(JSON.stringify({
-        players, currentPlayerIndex, currentRound, isDouble, isTriple
-      }));
-    }
-
-    function undoLastAction() {
-      if (historyStack.length === 0) return;
-      const state = JSON.parse(historyStack.pop());
-      players = state.players;
-      currentPlayerIndex = state.currentPlayerIndex;
-      currentRound = state.currentRound;
-      isDouble = state.isDouble;
-      isTriple = state.isTriple;
-
-      updateModifierUI();
-      updateGameUI();
-    }
-
-    function updateGameUI() {
-      const p = players[currentPlayerIndex];
-
-      activePlayerBanner.innerText = `${p.name.toUpperCase()}'S TURN (SEGMENT ${p.segment})`;
-      roundNumDisplay.innerText = currentRound;
-
-      for (let i = 1; i <= 3; i++) {
-        document.getElementById(`dart-${i}`).innerText = p.currentTurnDarts[i - 1] || '-';
-      }
-
-      const totalTurnScore = p.currentTurnScores.reduce((a, b) => a + b, 0);
-      turnTotalScoreDisplay.innerText = totalTurnScore;
-
-      const turnComplete = p.currentTurnDarts.length === 3 || p.completedSegmentThisTurn;
-      btnAdvanceTurn.disabled = !turnComplete;
-
-      document.getElementById('seg-req-1').innerText = p.segment === 1 ? `Rem: ${30 - p.segmentProgress}` : `30 Pts`;
-      document.getElementById('seg-req-2').innerText = p.segment === 2 ? `Rem: ${51 - p.segmentProgress}` : `51 Pts`;
-      document.getElementById('seg-req-3').innerText = p.segment === 3 ? `Rem: ${75 - p.segmentProgress}` : `75+ Pts`;
-      document.getElementById('seg-req-5').innerText = p.segment === 5 ? `Rem: ${130 - p.segmentProgress}` : `130 (6 Darts)`;
-      document.getElementById('seg-req-6').innerText = p.segment === 6 ? `Rem: ${175 - p.segmentProgress}` : `175 (9 Darts)`;
+    function updateRTUI() {
+      roundNumDisplay.innerText = rtCurrentRound;
+      const p = rtPlayers[rtCurrentPlayerIndex];
+      activePlayerBanner.innerText = `${p.name.toUpperCase()}'S TURN`;
 
       for (let i = 1; i <= 6; i++) {
-        const segEl = document.getElementById(`seg-${i}`);
-        segEl.classList.toggle('completed', i < p.segment);
+        const el = document.getElementById(`seg-${i}`);
+        el.classList.toggle('completed', i < p.currentSegment);
       }
 
-      const isSeg4 = (p.segment === 4);
-      document.querySelectorAll('.num-btn').forEach(btn => btn.disabled = isSeg4 || turnComplete);
-      btnDouble.disabled = isSeg4 || turnComplete;
-      btnTriple.disabled = isSeg4 || turnComplete;
-      btnMiss.disabled = turnComplete;
+      updateRTTurnDisplay();
+      renderRTScoreboard();
+    }
 
-      colorButtons.forEach(btn => {
-        btn.disabled = !isSeg4 || turnComplete;
-        btn.style.opacity = (isSeg4 && !turnComplete) ? '1' : '0.2';
-      });
-
-      const scoreboardBody = document.getElementById('scoreboard-body');
-      scoreboardBody.innerHTML = '';
-      players.forEach((player, idx) => {
+    function renderRTScoreboard() {
+      const body = document.getElementById('scoreboard-body');
+      body.innerHTML = '';
+      rtPlayers.forEach(p => {
         const tr = document.createElement('tr');
-        if (idx === currentPlayerIndex) tr.style.background = '#333';
         tr.innerHTML = `
-          <td>${player.name} ${idx === currentPlayerIndex ? '🎯' : ''}</td>
-          <td>${player.laps} / ${totalLaps}</td>
-          <td>Seg ${player.segment} (${getProgString(player)})</td>
-          <td>${player.roundsCount - 1}</td>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.lapsCompleted} / ${totalLaps}</td>
+          <td>Seg ${p.currentSegment}</td>
+          <td>${p.totalRounds}</td>
         `;
-        scoreboardBody.appendChild(tr);
+        body.appendChild(tr);
       });
     }
 
-    function getProgString(p) {
-      if (p.segment === 1) return `Rem: ${30 - p.segmentProgress} pts`;
-      if (p.segment === 2) return `Rem: ${51 - p.segmentProgress} pts`;
-      if (p.segment === 3) return `Rem: ${75 - p.segmentProgress} pts`;
-      if (p.segment === 4) return `${p.segmentProgress}/3 same`;
-      if (p.segment === 5) return `Rem: ${130 - p.segmentProgress} (${6 - p.segmentDartsThrown} left)`;
-      if (p.segment === 6) return `Rem: ${175 - p.segmentProgress} (${9 - p.segmentDartsThrown} left)`;
-      return `${p.segmentProgress} pts`;
+    /* ==========================================================
+       EMBEDDED GAME ENGINE: BASKETBALL DARTS
+       ========================================================== */
+    const BB_SCORING = {
+      basic: [
+        { label: 'Bull (6)', pts: 6 },
+        { label: 'Double (5)', pts: 5 },
+        { label: 'Triple (4)', pts: 4 },
+        { label: 'Outer Single (3)', pts: 3 },
+        { label: 'Inner Single (2)', pts: 2 }
+      ],
+      quad: [
+        { label: 'Bull (10)', pts: 10 },
+        { label: 'Double (9)', pts: 9 },
+        { label: 'Triple (7)', pts: 7 },
+        { label: 'Quad (5)', pts: 5 },
+        { label: 'Outer Single (4)', pts: 4 },
+        { label: 'Middle Single (3)', pts: 3 },
+        { label: 'Inner Single (2)', pts: 2 }
+      ]
+    };
+
+    let bbState = {
+      boardType: 'basic',
+      players: [],
+      currentPlayerIndex: 0,
+      quarter: 1,
+      possession: 1,
+      currentTurnDarts: []
+    };
+
+    function launchBasketball() {
+      bbState.boardType = document.getElementById('bb-board-type').value;
+      bbState.players = tournamentPlayers.map(p => ({
+        name: p.name,
+        totalPoints: 0,
+        quarterPoints: 0
+      }));
+      bbState.currentPlayerIndex = 0;
+      bbState.quarter = 1;
+      bbState.possession = 1;
+      bbState.currentTurnDarts = [];
+
+      renderBasketballButtons();
+      dashboardCard.classList.add('hidden');
+      basketballGameCard.classList.remove('hidden');
+      updateBasketballUI();
     }
 
-    function endGame() {
-      // Sort players by final placement
-      const sorted = [...players].sort((a, b) => {
-        if (b.laps !== a.laps) return b.laps - a.laps;
-        if (b.segment !== a.segment) return b.segment - a.segment;
-        return a.roundsCount - b.roundsCount;
-      });
+    function renderBasketballButtons() {
+      const container = document.getElementById('bb-segment-buttons');
+      container.innerHTML = '';
+      const options = BB_SCORING[bbState.boardType];
 
-      // Pass final results back to the Hub callback
-      onEventFinished(sorted);
+      options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-pad color-btn color-white';
+        btn.innerText = opt.label;
+        btn.onclick = () => recordBasketballDart(opt.pts);
+        container.appendChild(btn);
+      });
+    }
+
+    document.getElementById('bb-btn-miss').addEventListener('click', () => recordBasketballDart(0));
+    document.getElementById('bb-btn-undo').addEventListener('click', undoBasketballDart);
+
+    function recordBasketballDart(pts) {
+      if (bbState.currentTurnDarts.length >= 3) return;
+      bbState.currentTurnDarts.push(pts);
+      updateBasketballTurnDisplay();
+    }
+
+    function undoBasketballDart() {
+      if (bbState.currentTurnDarts.length > 0) {
+        bbState.currentTurnDarts.pop();
+        updateBasketballTurnDisplay();
+      }
+    }
+
+    function updateBasketballTurnDisplay() {
+      const darts = bbState.currentTurnDarts;
+      document.getElementById('bb-dart-1').innerText = darts[0] !== undefined ? darts[0] : '-';
+      document.getElementById('bb-dart-2').innerText = darts[1] !== undefined ? darts[1] : '-';
+      document.getElementById('bb-dart-3').innerText = darts[2] !== undefined ? darts[2] : '-';
+
+      const sum = darts.reduce((a, b) => a + b, 0);
+      document.getElementById('bb-turn-score').innerText = sum;
+      document.getElementById('bb-btn-advance').disabled = darts.length < 3;
+    }
+
+    function advanceBasketballTurn() {
+      const turnTotal = bbState.currentTurnDarts.reduce((a, b) => a + b, 0);
+      const player = bbState.players[bbState.currentPlayerIndex];
+      
+      player.totalPoints += turnTotal;
+      player.quarterPoints += turnTotal;
+      bbState.currentTurnDarts = [];
+
+      // Next Player
+      bbState.currentPlayerIndex++;
+      if (bbState.currentPlayerIndex >= bbState.players.length) {
+        bbState.currentPlayerIndex = 0;
+        bbState.possession++;
+        
+        // Quarter Complete
+        if (bbState.possession > 6) {
+          bbState.possession = 1;
+          bbState.quarter++;
+          bbState.players.forEach(p => p.quarterPoints = 0);
+        }
+      }
+
+      // Check Game Over (4 quarters done)
+      if (bbState.quarter > 4) {
+        const finalResults = [...bbState.players].sort((a, b) => b.totalPoints - a.totalPoints);
+        onEventFinished(finalResults);
+        return;
+      }
+
+      updateBasketballUI();
+    }
+
+    function updateBasketballUI() {
+      document.getElementById('bb-quarter').innerText = `Q${bbState.quarter}`;
+      document.getElementById('bb-possession').innerText = bbState.possession;
+      
+      const activePlayer = bbState.players[bbState.currentPlayerIndex];
+      document.getElementById('bb-active-banner').innerText = `${activePlayer.name.toUpperCase()}'S TURN`;
+
+      updateBasketballTurnDisplay();
+      renderBasketballScoreboard();
+    }
+
+    function renderBasketballScoreboard() {
+      const body = document.getElementById('bb-scoreboard-body');
+      body.innerHTML = '';
+
+      bbState.players.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${p.name}</strong></td>
+          <td>${p.totalPoints} pts</td>
+          <td>${p.quarterPoints} pts</td>
+        `;
+        body.appendChild(tr);
+      });
     }
   </script>
 </body>
