@@ -11,7 +11,8 @@
         :root {
             --bg-color: #121212;
             --card-bg: #1e1e1e;
-            --accent-color: #4caf50;
+            --accent-color: #ff9800;
+            --accent-hover: #e08600;
             --text-color: #ffffff;
             --subtext-color: #aaaaaa;
             --border-color: #333333;
@@ -53,22 +54,30 @@
         h1, h2, h3 {
             text-align: center;
             margin-top: 0;
+            color: var(--accent-color);
         }
 
         .btn {
             background-color: var(--accent-color);
-            color: white;
+            color: #000;
             border: none;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 6px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             width: 100%;
             transition: background 0.2s;
         }
 
         .btn:hover {
-            opacity: 0.9;
+            background-color: var(--accent-hover);
+        }
+
+        .btn:disabled {
+            background-color: #555 !important;
+            color: #888;
+            cursor: not-allowed;
         }
 
         .checkbox-group {
@@ -76,6 +85,10 @@
             flex-direction: column;
             gap: 10px;
             margin: 15px 0;
+            background: #111;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
         }
 
         .checkbox-item {
@@ -84,6 +97,12 @@
             gap: 10px;
             font-size: 18px;
             cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-color);
         }
 
         .form-group {
@@ -101,7 +120,7 @@
             padding: 10px;
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            background-color: #2a2a2a;
+            background-color: #111;
             color: #fff;
             box-sizing: border-box;
         }
@@ -120,133 +139,93 @@
 
         th {
             color: var(--subtext-color);
+            background: #2a2a32;
         }
 
-        /* --- ROMAN EMPIRE STYLES --- */
-        .roman-status-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
         }
 
-        .roman-metric {
-            background: #2a2a2a;
-            padding: 12px;
-            border-radius: 8px;
+        .active-player-banner {
+            font-size: 1.8rem;
+            font-weight: bold;
             text-align: center;
-            border: 1px solid var(--border-color);
+            padding: 10px;
+            background: #333;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #ffeb3b;
         }
 
-        .roman-metric span {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--subtext-color);
-            text-transform: uppercase;
+        .dart-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
         }
 
-        .roman-metric strong {
-            font-size: 1.4rem;
-            color: var(--gold-2);
+        .dart-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
-        .roman-banner {
+        .dart-box {
+            width: 70px;
+            height: 40px;
+            border: 2px dashed #666;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: #2a2a2a;
-            padding: 12px 18px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-        }
-
-        .mode-pills {
-            display: flex;
-            gap: 8px;
             justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .pill {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #2a2a2a;
-            border: 1px solid var(--border-color);
-            color: var(--stone);
             font-weight: bold;
-            cursor: pointer;
+            border-radius: 5px;
+            background: #222;
         }
 
-        .pill.active {
-            background: var(--gold);
-            color: #111;
+        .turn-total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ffeb3b;
         }
 
-        .number-grid {
+        .controls-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
-            margin-bottom: 15px;
+            margin-top: 15px;
         }
 
-        .dart-btn {
-            padding: 14px 0;
-            font-size: 1.1rem;
+        .btn-pad {
+            padding: 12px 5px;
             font-weight: bold;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: #2a2a2a;
+            border-radius: 5px;
+            border: none;
+            background: #444;
             color: #fff;
             cursor: pointer;
         }
 
-        .dart-btn:hover { background: #333; }
-        .dart-btn.special { background: #5a2219; border-color: #8f2d21; }
-        .dart-btn.utility { background: #234333; border-color: #2f5d47; }
+        .btn-pad:hover { background: #666; }
+        .btn-pad.modifier { background: #0288d1; }
+        .btn-pad.modifier.active { background: #00bcd4; box-shadow: 0 0 8px #00bcd4; }
+        .btn-pad.action { background: #f57c00; }
 
-        .action-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 20px;
+        .advance-btn {
+            background: #388e3c;
+            color: white;
+            font-size: 1.1rem;
+            padding: 15px;
+            margin-top: 15px;
         }
 
-        .board-box {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 20px auto;
-        }
-
-        .feed-list {
-            max-height: 180px;
-            overflow-y: auto;
-            background: #181818;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        .feed-item {
-            padding: 6px 0;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .mini-seg {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #111;
-            margin-right: 4px;
-        }
-
-        .mini-seg.shielded::after {
-            content: " ✦";
-            color: #fff;
-        }
+        .advance-btn:hover { background: #2e7d32; }
     </style>
 </head>
 <body>
@@ -277,11 +256,19 @@
         <h2>Tournament Roster & Events</h2>
         <div class="form-group">
             <label>Add Players (Comma Separated):</label>
-            <input type="text" id="player-names-input" placeholder="e.g. Cassius, Livia, Maximus">
+            <input type="text" id="player-names-input" placeholder="e.g. Robin, Marion, Tuck">
         </div>
         
         <h3>Select Included Events:</h3>
         <div class="checkbox-group">
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="robinhood" checked>
+                <span>🏹 Robin Hood Darts</span>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="roman" checked>
+                <span>🏛️ Roman Empire</span>
+            </label>
             <label class="checkbox-item">
                 <input type="checkbox" class="event-checkbox" value="racetrack" checked>
                 <span>🏁 Race Track #1</span>
@@ -294,84 +281,75 @@
                 <input type="checkbox" class="event-checkbox" value="golf" checked>
                 <span>⛳ Golf Darts</span>
             </label>
-            <label class="checkbox-item">
-                <input type="checkbox" class="event-checkbox" value="roman" checked>
-                <span>🏛️ Roman Empire</span>
-            </label>
         </div>
 
         <button class="btn" onclick="startTournament()">🚀 Confirm Setup & Launch Hub</button>
     </div>
 
-    <!-- 3. EMBEDDED GAME ENGINE: RACE TRACK #1 -->
+    <!-- 3. EMBEDDED GAME ENGINE: ROBIN HOOD DARTS -->
+    <div id="robinhood-game-card" class="card hidden">
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>🏹 Robin Hood Darts 🏹</h2>
+        <div class="game-header">
+            <div>Round: <span id="rh-round-num">1</span> / <span id="rh-max-rounds">10</span></div>
+            <div>Target Segment: <strong style="color: var(--accent-color);" id="rh-target-segment">20</strong></div>
+        </div>
+        <div id="rh-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
+
+        <div class="dart-display-container">
+            <div class="dart-display">
+                <div class="dart-box" id="rh-dart-1">-</div>
+                <div class="dart-box" id="rh-dart-2">-</div>
+                <div class="dart-box" id="rh-dart-3">-</div>
+            </div>
+            <div class="turn-total">Turn Score: <span id="rh-turn-score">0</span></div>
+        </div>
+
+        <div class="controls-grid">
+            <button class="btn-pad modifier" id="rh-btn-double" onclick="setRHModifier('double')">DOUBLE</button>
+            <button class="btn-pad modifier" id="rh-btn-triple" onclick="setRHModifier('triple')">TRIPLE</button>
+            <button class="btn-pad action" id="rh-btn-robin" style="background: #9c27b0;" onclick="recordRHDart('robin', 50)">ROBIN HOOD (50)</button>
+            <button class="btn-pad action" id="rh-btn-miss" onclick="recordRHDart('miss', 0)">MISS (0)</button>
+            <button class="btn-pad action" id="rh-btn-undo" style="background:#d32f2f;" onclick="undoRHDart()">UNDO</button>
+            <div id="rh-number-buttons" style="display: contents;"></div>
+        </div>
+
+        <button class="btn advance-btn" id="rh-btn-advance" disabled onclick="advanceRobinHoodTurn()">Advance Turn ➡️</button>
+
+        <h3 style="margin-top:25px;">Robin Hood Leaderboard</h3>
+        <table>
+            <thead>
+                <tr><th>Player</th><th>Total Points</th><th>Bullseye / Robin Hits</th></tr>
+            </thead>
+            <tbody id="rh-scoreboard-body"></tbody>
+        </table>
+    </div>
+
+    <!-- 4. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
+    <div id="roman-game-card" class="card hidden">
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>🏛️ Roman Empire 🏛️</h2>
+    </div>
+
+    <!-- 5. EMBEDDED GAME ENGINE: RACE TRACK #1 -->
     <div id="racetrack-game-card" class="card hidden">
         <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
         <h2>🏁 Race Track #1 🏁</h2>
     </div>
 
-    <!-- 4. EMBEDDED GAME ENGINE: BASKETBALL DARTS -->
+    <!-- 6. EMBEDDED GAME ENGINE: BASKETBALL DARTS -->
     <div id="basketball-game-card" class="card hidden">
         <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
         <h2>🏀 Basketball Darts 🏀</h2>
     </div>
 
-    <!-- 5. EMBEDDED GAME ENGINE: GOLF DARTS -->
+    <!-- 7. EMBEDDED GAME ENGINE: GOLF DARTS -->
     <div id="golf-game-card" class="card hidden">
         <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
         <h2>⛳ Golf Darts ⛳</h2>
     </div>
 
-    <!-- 6. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
-    <div id="roman-game-card" class="card hidden">
-        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
-        <h2 style="font-family: 'Cinzel', serif; color: var(--gold-2);">🏛️ Roman Empire 🏛️</h2>
-
-        <div class="roman-status-grid">
-            <div class="roman-metric"><span>Current Round</span><strong id="roman-round-display">1 / 6</strong></div>
-            <div class="roman-metric"><span>Darts Thrown</span><strong id="roman-darts-thrown">0</strong></div>
-            <div class="roman-metric"><span>Darts Left</span><strong id="roman-darts-left">3</strong></div>
-        </div>
-
-        <div class="roman-banner">
-            <div>
-                <div id="roman-player-name" style="font-weight: bold; font-size: 1.2rem;">Player's Turn</div>
-                <div id="roman-player-sub" style="font-size: 0.85rem; color: var(--subtext-color);">Throw 3 darts to conquer territories.</div>
-            </div>
-            <div id="roman-player-chip" style="width: 20px; height: 20px; border-radius: 50%; background: #777;"></div>
-        </div>
-
-        <div class="board-box">
-            <svg id="dartboard" viewBox="-260 -260 520 520" role="img" aria-label="Interactive Roman Empire dartboard"></svg>
-        </div>
-
-        <div class="mode-pills">
-            <button class="pill active" id="singleMode" onclick="setMultiplier(1)">1× Single</button>
-            <button class="pill" id="doubleMode" onclick="setMultiplier(2)">2× Double</button>
-            <button class="pill" id="tripleMode" onclick="setMultiplier(3)">3× Triple</button>
-        </div>
-
-        <div class="number-grid" id="numberButtons"></div>
-
-        <div class="action-row">
-            <button class="dart-btn special" onclick="handleDartHit('bull')">Bull</button>
-            <button class="dart-btn utility" onclick="handleDartHit('miss')">Miss</button>
-            <button class="dart-btn utility" id="undoBtn" onclick="undoLastAction()">Undo</button>
-            <button class="dart-btn special" onclick="endTurn()">Advance Turn ➡️</button>
-        </div>
-
-        <h3>Empire Scoreboard</h3>
-        <table>
-            <thead>
-                <tr><th>Player</th><th>Territories Claimed</th><th>Segments</th></tr>
-            </thead>
-            <tbody id="roman-scoreboard-body"></tbody>
-        </table>
-
-        <h3 style="margin-top:20px;">Battle Log</h3>
-        <div class="feed-list" id="feedList"></div>
-    </div>
-
-    <!-- 7. EVENT RESULT CARD -->
+    <!-- 8. EVENT RESULT CARD -->
     <div id="event-result-card" class="card hidden">
         <h2>🎉 Event Finished! 🎉</h2>
         <div id="event-rankings-display"></div>
@@ -388,10 +366,11 @@
 
     const dashboardCard = document.getElementById('dashboard-card');
     const rosterCard = document.getElementById('roster-card');
+    const robinhoodGameCard = document.getElementById('robinhood-game-card');
+    const romanGameCard = document.getElementById('roman-game-card');
     const racetrackGameCard = document.getElementById('racetrack-game-card');
     const basketballGameCard = document.getElementById('basketball-game-card');
     const golfGameCard = document.getElementById('golf-game-card');
-    const romanGameCard = document.getElementById('roman-game-card');
     const eventResultCard = document.getElementById('event-result-card');
 
     function showRosterCard() {
@@ -448,320 +427,207 @@
         const container = document.getElementById('included-events-launcher');
         container.innerHTML = '<h3>Available Olympic Events</h3>';
 
-        if (selectedEvents.includes('roman')) {
+        if (selectedEvents.includes('robinhood')) {
             const div = document.createElement('div');
             div.className = 'form-group';
-            div.style.marginTop = '20px';
+            div.style.marginTop = '15px';
             div.innerHTML = `
-                <label for="roman-rounds-count">Roman Empire Campaign Rounds:</label>
-                <select id="roman-rounds-count">
-                    <option value="6" selected>6 Rounds (Short Campaign)</option>
-                    <option value="10">10 Rounds (Standard Campaign)</option>
-                    <option value="15">15 Rounds (Grand Empire)</option>
-                </select>
-                <button class="btn" style="background: #8b0000; color: white; margin-top:8px;" onclick="launchRomanEmpire()">🏛️ Launch Event: Roman Empire</button>
+                <button class="btn" style="background: #9c27b0; color: white;" onclick="launchRobinHood()">🏹 Launch Event: Robin Hood Darts</button>
             `;
             container.appendChild(div);
         }
     }
 
     function returnToDashboard() {
+        robinhoodGameCard.classList.add('hidden');
+        romanGameCard.classList.add('hidden');
         racetrackGameCard.classList.add('hidden');
         basketballGameCard.classList.add('hidden');
         golfGameCard.classList.add('hidden');
-        romanGameCard.classList.add('hidden');
         eventResultCard.classList.add('hidden');
         dashboardCard.classList.remove('hidden');
         renderHubLeaderboard();
     }
 
-    // --- ROMAN EMPIRE GAME ENGINE ---
-    const SEGMENTS = Array.from({ length: 20 }, (_, i) => i + 1);
-    const BOARD_ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
-    const PLAYER_COLORS = ["#27D7E9", "#BA4C3B", "#4F8CFF", "#4FB477", "#C86BFA", "#F28F3B", "#24B7B0", "#E75A8A"];
-
-    let romanState = {
+    // --- ROBIN HOOD GAME ENGINE ---
+    const RH_SEGMENTS = [20, 19, 18, 17, 16, 15, 14, 13, 12, 11];
+    let rhState = {
         players: [],
-        totalRounds: 6,
         currentRound: 1,
+        maxRounds: 10,
         currentPlayerIndex: 0,
-        dartsInTurn: 0,
-        totalDartsThrown: 0,
-        activeMultiplier: 1,
-        segments: {},
-        history: [],
-        feed: []
+        darts: [],
+        activeModifier: null, // 'double' | 'triple' | null
+        history: []
     };
 
-    function launchRomanEmpire() {
-        const selectedRounds = parseInt(document.getElementById('roman-rounds-count').value) || 6;
-        
-        romanState.players = players.map((name, index) => ({
-            id: index,
+    function launchRobinHood() {
+        rhState.players = players.map(name => ({
             name: name,
-            color: PLAYER_COLORS[index % PLAYER_COLORS.length]
+            totalPoints: 0,
+            specialHits: 0
         }));
-        
-        romanState.totalRounds = selectedRounds;
-        romanState.currentRound = 1;
-        romanState.currentPlayerIndex = 0;
-        romanState.dartsInTurn = 0;
-        romanState.totalDartsThrown = 0;
-        romanState.activeMultiplier = 1;
-        romanState.segments = {};
-        romanState.history = [];
-        romanState.feed = [];
 
-        SEGMENTS.forEach(s => {
-            romanState.segments[s] = { ownerId: null, shielded: false };
-        });
+        rhState.currentRound = 1;
+        rhState.maxRounds = RH_SEGMENTS.length;
+        rhState.currentPlayerIndex = 0;
+        rhState.darts = [];
+        rhState.activeModifier = null;
+        rhState.history = [];
 
         dashboardCard.classList.add('hidden');
-        romanGameCard.classList.remove('hidden');
+        robinhoodGameCard.classList.remove('hidden');
 
-        renderNumberGrid();
-        renderDartboard();
-        updateRomanUI();
-        logFeed("Campaign initialized. Prepare for battle!");
+        renderRHNumberButtons();
+        updateRHUI();
     }
 
-    function renderNumberGrid() {
-        const grid = document.getElementById('numberButtons');
-        grid.innerHTML = '';
-        SEGMENTS.forEach(num => {
-            const btn = document.createElement('button');
-            btn.className = 'dart-btn';
-            btn.innerText = num;
-            btn.onclick = () => handleDartHit(num);
-            grid.appendChild(btn);
-        });
+    function renderRHNumberButtons() {
+        const container = document.getElementById('rh-number-buttons');
+        container.innerHTML = '';
+
+        // Target segment button
+        const targetSeg = RH_SEGMENTS[rhState.currentRound - 1];
+        const btn = document.createElement('button');
+        btn.className = 'btn-pad';
+        btn.style.background = '#4caf50';
+        btn.innerText = `HIT (${targetSeg})`;
+        btn.onclick = () => recordRHDart('target', targetSeg);
+        container.appendChild(btn);
+
+        // Bullseye button
+        const bullBtn = document.createElement('button');
+        bullBtn.className = 'btn-pad';
+        bullBtn.style.background = '#e91e63';
+        bullBtn.innerText = 'BULL (25/50)';
+        bullBtn.onclick = () => recordRHDart('bull', 25);
+        container.appendChild(bullBtn);
     }
 
-    function setMultiplier(m) {
-        romanState.activeMultiplier = m;
-        document.getElementById('singleMode').classList.toggle('active', m === 1);
-        document.getElementById('doubleMode').classList.toggle('active', m === 2);
-        document.getElementById('tripleMode').classList.toggle('active', m === 3);
-    }
-
-    function saveSnapshot() {
-        romanState.history.push(JSON.stringify({
-            currentRound: romanState.currentRound,
-            currentPlayerIndex: romanState.currentPlayerIndex,
-            dartsInTurn: romanState.dartsInTurn,
-            totalDartsThrown: romanState.totalDartsThrown,
-            segments: romanState.segments,
-            feed: romanState.feed
-        }));
-    }
-
-    function undoLastAction() {
-        if (romanState.history.length === 0) return;
-        const last = JSON.parse(romanState.history.pop());
-        romanState.currentRound = last.currentRound;
-        romanState.currentPlayerIndex = last.currentPlayerIndex;
-        romanState.dartsInTurn = last.dartsInTurn;
-        romanState.totalDartsThrown = last.totalDartsThrown;
-        romanState.segments = last.segments;
-        romanState.feed = last.feed;
-        updateRomanUI();
-        renderDartboard();
-    }
-
-    function handleDartHit(val) {
-        if (romanState.dartsInTurn >= 3) return;
-        saveSnapshot();
-
-        const p = romanState.players[romanState.currentPlayerIndex];
-        const mult = romanState.activeMultiplier;
-
-        if (val === 'miss') {
-            logFeed(`${p.name} missed the target.`);
-        } else if (val === 'bull') {
-            SEGMENTS.forEach(s => {
-                if (romanState.segments[s].ownerId === p.id) {
-                    romanState.segments[s].shielded = true;
-                }
-            });
-            logFeed(`🎯 ${p.name} hit Bullseye! Shielded all owned territories.`);
+    function setRHModifier(mod) {
+        if (rhState.activeModifier === mod) {
+            rhState.activeModifier = null;
         } else {
-            const segNum = parseInt(val);
-            const target = romanState.segments[segNum];
-
-            if (target.ownerId === null) {
-                target.ownerId = p.id;
-                target.shielded = mult > 1;
-                logFeed(`⚔️ ${p.name} claimed segment ${segNum}${target.shielded ? ' with a Shield' : ''}!`);
-            } else if (target.ownerId === p.id) {
-                if (!target.shielded) {
-                    target.shielded = true;
-                    logFeed(`🛡️ ${p.name} fortified segment ${segNum} with a Shield.`);
-                } else {
-                    logFeed(`${p.name} hit owned segment ${segNum} (already shielded).`);
-                }
-            } else {
-                const enemy = romanState.players.find(x => x.id === target.ownerId);
-                if (target.shielded) {
-                    if (mult >= 2) {
-                        target.shielded = false;
-                        logFeed(`💥 ${p.name} broke ${enemy.name}'s shield on segment ${segNum}!`);
-                    } else {
-                        logFeed(`🛡️ ${p.name}'s strike was deflected by ${enemy.name}'s shield on ${segNum}.`);
-                    }
-                } else {
-                    target.ownerId = p.id;
-                    target.shielded = mult === 3;
-                    logFeed(`🚩 ${p.name} conquered segment ${segNum} from ${enemy.name}!`);
-                }
-            }
+            rhState.activeModifier = mod;
         }
 
-        romanState.dartsInTurn++;
-        romanState.totalDartsThrown++;
-        setMultiplier(1);
-        updateRomanUI();
-        renderDartboard();
+        document.getElementById('rh-btn-double').classList.toggle('active', rhState.activeModifier === 'double');
+        document.getElementById('rh-btn-triple').classList.toggle('active', rhState.activeModifier === 'triple');
     }
 
-    function endTurn() {
-        if (romanState.dartsInTurn === 0) return;
-        romanState.dartsInTurn = 0;
-        romanState.currentPlayerIndex++;
+    function recordRHDart(type, baseVal) {
+        if (rhState.darts.length >= 3) return;
 
-        if (romanState.currentPlayerIndex >= romanState.players.length) {
-            romanState.currentPlayerIndex = 0;
-            romanState.currentRound++;
+        let multiplier = 1;
+        if (rhState.activeModifier === 'double') multiplier = 2;
+        if (rhState.activeModifier === 'triple') multiplier = 3;
+
+        let points = 0;
+        let isSpecial = false;
+
+        if (type === 'target') {
+            points = baseVal * multiplier;
+        } else if (type === 'bull') {
+            points = (rhState.activeModifier === 'double') ? 50 : 25;
+            isSpecial = true;
+        } else if (type === 'robin') {
+            points = 50;
+            isSpecial = true;
+        } else if (type === 'miss') {
+            points = 0;
         }
 
-        if (romanState.currentRound > romanState.totalRounds) {
-            finishRomanEmpire();
+        rhState.history.push(JSON.stringify({
+            players: JSON.parse(JSON.stringify(rhState.players)),
+            darts: [...rhState.darts]
+        }));
+
+        rhState.darts.push({ points, isSpecial, text: `${points} pts` });
+        rhState.players[rhState.currentPlayerIndex].totalPoints += points;
+        if (isSpecial) rhState.players[rhState.currentPlayerIndex].specialHits++;
+
+        setRHModifier(null);
+        updateRHUI();
+    }
+
+    function undoRHDart() {
+        if (rhState.history.length === 0) return;
+        const last = JSON.parse(rhState.history.pop());
+        rhState.players = last.players;
+        rhState.darts = last.darts;
+        setRHModifier(null);
+        updateRHUI();
+    }
+
+    function advanceRobinHoodTurn() {
+        if (rhState.darts.length === 0) return;
+
+        rhState.darts = [];
+        rhState.history = [];
+        rhState.currentPlayerIndex++;
+
+        if (rhState.currentPlayerIndex >= rhState.players.length) {
+            rhState.currentPlayerIndex = 0;
+            rhState.currentRound++;
+        }
+
+        if (rhState.currentRound > rhState.maxRounds) {
+            finishRobinHood();
             return;
         }
 
-        setMultiplier(1);
-        updateRomanUI();
+        renderRHNumberButtons();
+        updateRHUI();
     }
 
-    function finishRomanEmpire() {
-        // Calculate Rankings
-        const scores = romanState.players.map(p => {
-            const count = SEGMENTS.filter(s => romanState.segments[s].ownerId === p.id).length;
-            return { name: p.name, score: count };
-        }).sort((a, b) => b.score - a.score);
+    function updateRHUI() {
+        const targetSeg = RH_SEGMENTS[rhState.currentRound - 1];
+        document.getElementById('rh-round-num').innerText = rhState.currentRound;
+        document.getElementById('rh-max-rounds').innerText = rhState.maxRounds;
+        document.getElementById('rh-target-segment').innerText = targetSeg;
 
-        // Award Olympic Hub Points
-        scores.forEach((item, rank) => {
+        const activePlayer = rhState.players[rhState.currentPlayerIndex];
+        document.getElementById('rh-active-banner').innerText = `${activePlayer.name.toUpperCase()}'S TURN`;
+
+        // Render Darts
+        for (let i = 1; i <= 3; i++) {
+            const box = document.getElementById(`rh-dart-${i}`);
+            box.innerText = rhState.darts[i - 1] ? rhState.darts[i - 1].text : '-';
+        }
+
+        const turnTotal = rhState.darts.reduce((sum, d) => sum + d.points, 0);
+        document.getElementById('rh-turn-score').innerText = turnTotal;
+
+        document.getElementById('rh-btn-advance').disabled = rhState.darts.length === 0;
+
+        // Scoreboard
+        const tbody = document.getElementById('rh-scoreboard-body');
+        tbody.innerHTML = '';
+        rhState.players.forEach(p => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td><strong>${p.name}</strong></td><td>${p.totalPoints}</td><td>${p.specialHits}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function finishRobinHood() {
+        const sorted = [...rhState.players].sort((a, b) => b.totalPoints - a.totalPoints);
+
+        // Award Olympic points
+        sorted.forEach((item, rank) => {
             const pts = Math.max(10 - rank * 2, 2);
             overallStandings[item.name] = (overallStandings[item.name] || 0) + pts;
         });
 
-        romanGameCard.classList.add('hidden');
+        robinhoodGameCard.classList.add('hidden');
         eventResultCard.classList.remove('hidden');
 
-        let html = '<h3>Roman Empire Conquest Standings</h3><ol>';
-        scores.forEach(s => {
-            html += `<li><strong>${s.name}</strong>: ${s.score} Territories Claimed</li>`;
+        let html = '<h3>Robin Hood Final Results</h3><ol>';
+        sorted.forEach(s => {
+            html += `<li><strong>${s.name}</strong>: ${s.totalPoints} pts (${s.specialHits} Special Hits)</li>`;
         });
         html += '</ol>';
         document.getElementById('event-rankings-display').innerHTML = html;
-    }
-
-    function updateRomanUI() {
-        const p = romanState.players[romanState.currentPlayerIndex];
-        document.getElementById('roman-round-display').innerText = `${romanState.currentRound} / ${romanState.totalRounds}`;
-        document.getElementById('roman-darts-thrown').innerText = romanState.totalDartsThrown;
-        document.getElementById('roman-darts-left').innerText = 3 - romanState.dartsInTurn;
-
-        document.getElementById('roman-player-name').innerText = `${p.name}'s Turn`;
-        document.getElementById('roman-player-chip').style.background = p.color;
-
-        // Render Scoreboard
-        const tbody = document.getElementById('roman-scoreboard-body');
-        tbody.innerHTML = '';
-        romanState.players.forEach(pl => {
-            const owned = SEGMENTS.filter(s => romanState.segments[s].ownerId === pl.id);
-            const tr = document.createElement('tr');
-            
-            let segBadges = owned.map(s => {
-                const isShielded = romanState.segments[s].shielded;
-                return `<span class="mini-seg ${isShielded ? 'shielded' : ''}" style="background:${pl.color};">${s}</span>`;
-            }).join('');
-
-            tr.innerHTML = `
-                <td><strong style="color:${pl.color}">${pl.name}</strong></td>
-                <td>${owned.length} (${Math.round((owned.length / 20) * 100)}%)</td>
-                <td>${segBadges || '<span style="color:#666">None</span>'}</td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('undoBtn').disabled = romanState.history.length === 0;
-    }
-
-    function logFeed(msg) {
-        romanState.feed.unshift(msg);
-        const list = document.getElementById('feedList');
-        list.innerHTML = romanState.feed.map(f => `<div class="feed-item">${f}</div>`).join('');
-    }
-
-    function renderDartboard() {
-        const svg = document.getElementById('dartboard');
-        svg.innerHTML = '';
-
-        const outerR = 200, innerR = 120, bullR = 25;
-        let angleStep = (2 * Math.PI) / 20;
-        let startAngle = -Math.PI / 2 - angleStep / 2;
-
-        BOARD_ORDER.forEach((num, index) => {
-            let a1 = startAngle + index * angleStep;
-            let a2 = a1 + angleStep;
-
-            let x1_out = outerR * Math.cos(a1), y1_out = outerR * Math.sin(a1);
-            let x2_out = outerR * Math.cos(a2), y2_out = outerR * Math.sin(a2);
-            let x1_in = innerR * Math.cos(a1), y1_in = innerR * Math.sin(a1);
-            let x2_in = innerR * Math.cos(a2), y2_in = innerR * Math.sin(a2);
-
-            let d = `M ${x1_in} ${y1_in} L ${x1_out} ${y1_out} A ${outerR} ${outerR} 0 0 1 ${x2_out} ${y2_out} L ${x2_in} ${y2_in} A ${innerR} ${innerR} 0 0 0 ${x1_in} ${y1_in} Z`;
-
-            const seg = romanState.segments[num];
-            let fillColor = '#222';
-            if (seg.ownerId !== null) {
-                fillColor = romanState.players.find(x => x.id === seg.ownerId).color;
-            }
-
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', d);
-            path.setAttribute('fill', fillColor);
-            path.setAttribute('stroke', seg.shielded ? '#f1d29a' : '#444');
-            path.setAttribute('stroke-width', seg.shielded ? '4' : '1');
-            svg.appendChild(path);
-
-            // Label Text
-            let textAngle = a1 + angleStep / 2;
-            let tx = (outerR + 25) * Math.cos(textAngle);
-            let ty = (outerR + 25) * Math.sin(textAngle);
-
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', tx);
-            text.setAttribute('y', ty);
-            text.setAttribute('fill', '#fff');
-            text.setAttribute('font-size', '16');
-            text.setAttribute('font-weight', 'bold');
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('dominant-baseline', 'central');
-            text.textContent = num;
-            svg.appendChild(text);
-        });
-
-        // Bullseye
-        const bull = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        bull.setAttribute('cx', 0);
-        bull.setAttribute('cy', 0);
-        bull.setAttribute('r', bullR);
-        bull.setAttribute('fill', '#8f2d21');
-        bull.setAttribute('stroke', '#d9b36a');
-        bull.setAttribute('stroke-width', '2');
-        svg.appendChild(bull);
     }
 </script>
 </body>
