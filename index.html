@@ -111,7 +111,7 @@
       background-color: var(--btn-hover);
     }
 
-    /* Scoreboard Layout: Vertical scores, player names in a row */
+    /* Scoreboard Layout */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -131,7 +131,7 @@
 
     iframe.game-frame {
       width: 100%;
-      height: 650px;
+      height: 700px;
       border: 1px solid var(--border);
       border-radius: 8px;
       background: #000;
@@ -157,7 +157,8 @@
       
       <label for="event-select">Active Event:</label>
       <select id="event-select">
-        <option value="robin-hood">🎯 Robin Hood (External Repo)</option>
+        <option value="roman-empire">🏛️ Roman Empire</option>
+        <option value="robin-hood">🎯 Robin Hood</option>
         <option value="race-track-1">🏁 Race Track #1</option>
         <option value="golf">⛳ Golf Darts</option>
         <option value="shove-a-penny">🪙 Shove a Penny</option>
@@ -170,7 +171,7 @@
       <button class="btn" onclick="launchEvent()">Launch Event</button>
     </div>
 
-    <!-- 2. EXTERNAL EMBED VIEW (ROBIN HOOD & COMPATIBLE GAMES) -->
+    <!-- 2. EXTERNAL EMBED VIEW (ROMAN EMPIRE, ROBIN HOOD, ETC.) -->
     <div id="external-game-card" class="card hidden">
       <div class="flex-row" style="margin-bottom: 15px;">
         <button class="btn btn-secondary" onclick="returnToDashboard()">← Return to Olympic Hub</button>
@@ -199,6 +200,11 @@
   <script>
     // Event Configuration Mapping
     const EVENT_CONFIG = {
+      "roman-empire": {
+        name: "Roman Empire",
+        type: "iframe",
+        url: "https://herbenero.github.io/Roman-Empire/"
+      },
       "robin-hood": {
         name: "Robin Hood",
         type: "iframe",
