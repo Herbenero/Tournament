@@ -329,6 +329,10 @@
           <label class="checkbox-item">
             <input type="checkbox" class="event-checkbox" value="golf" checked>
             <span>⛳ Golf Darts</span>
+            <label class="checkbox-item">
+    <input type="checkbox" class="event-checkbox" value="roman" checked>
+    <span>🏛️ Roman Empire</span>
+</label>
           </label>
         </div>
       </div>
@@ -580,6 +584,14 @@
         `;
         container.appendChild(div);
       }
+      if (selectedEvents.includes('roman')) {
+    const div = document.createElement('div');
+    div.className = 'form-group';
+    div.style.marginTop = '20px';
+    div.innerHTML = `
+        <label for="roman-target-score">Roman Empire Target Score / Conquest Goal:</label> <select id="roman-target-score"> <option value="300">300 Points (Short Campaign)</option> <option value="500" selected>500 Points (Standard Empire)</option> <option value="700">700 Points (Grand Conquest)</option> </select> <button class="btn" style="background: #8b0000; color: white; margin-top:8px;" onclick="launchRomanEmpire()">🏛️ Launch Event: Roman Empire</button> `;
+    container.appendChild(div);
+}
 
       if (selectedEvents.includes('golf')) {
         const div = document.createElement('div');
@@ -932,6 +944,44 @@
         body.appendChild(tr);
       });
     }
+    <!-- 6. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
+<div id="roman-game-card" class="card hidden">
+    <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+    <h2>🏛️ Roman Empire 🏛️</h2>
+    <div class="game-header">
+        <div>Campaign Round: <span id="roman-round-num">1</span></div>
+        <div>Target Empire Score: <span id="roman-target-display">500</span></div>
+    </div>
+    <div id="roman-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
+
+    <div class="dart-display-container">
+        <div class="dart-display">
+            <div class="dart-box" id="roman-dart-1">-</div>
+            <div class="dart-box" id="roman-dart-2">-</div>
+            <div class="dart-box" id="roman-dart-3">-</div>
+        </div>
+        <div class="turn-total">Turn Conquest Score: <span id="roman-turn-score">0</span></div>
+    </div>
+
+    <!-- Controls / Scoring Grid -->
+    <div class="controls-grid">
+        <button class="btn-pad modifier" id="roman-btn-double">DOUBLE</button>
+        <button class="btn-pad modifier" id="roman-btn-triple">TRIPLE</button>
+        <button class="btn-pad action" id="roman-btn-miss">MISS (0)</button>
+        <button class="btn-pad action" id="roman-btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
+        <div id="roman-number-buttons" style="display: contents;"></div>
+    </div>
+
+    <button class="btn advance-btn" id="roman-btn-advance" disabled onclick="advanceRomanTurn()">Advance Turn ➡️</button>
+
+    <h3 style="margin-top:25px;">Empire Standings</h3>
+    <table>
+        <thead>
+            <tr><th>Player</th><th>Total Conquest Score</th><th>Current Rank</th></tr>
+        </thead>
+        <tbody id="roman-scoreboard-body"></tbody>
+    </table>
+</div>
 
     /* ==========================================================
        EMBEDDED GAME ENGINE: GOLF DARTS
@@ -1025,6 +1075,27 @@
         body.appendChild(tr);
       });
     }
+    const romanGameCard = document.getElementById('roman-game-card');
+
+function returnToDashboard() {
+    racetrackGameCard.classList.add('hidden');
+    basketballGameCard.classList.add('hidden');
+    golfGameCard.classList.add('hidden');
+    romanGameCard.classList.add('hidden'); // Add this line
+    eventResultCard.classList.add('hidden');
+    dashboardCard.classList.remove('hidden');
+    renderHubLeaderboard();
+}
+
+// Function to launch the game
+function launchRomanEmpire() {
+    const targetVal = parseInt(document.getElementById('roman-target-score').value) || 500;
+    document.getElementById('roman-target-display').innerText = targetVal;
+    
+    dashboardCard.classList.add('hidden');
+    romanGameCard.classList.remove('hidden');
+    // Initialize your game state here...
+}
   </script>
 </body>
 </html>
