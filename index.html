@@ -330,7 +330,31 @@
             <input type="checkbox" class="event-checkbox" value="golf" checked>
             <span>⛳ Golf Darts</span>
           </label>
-        </div>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>🎯 Robin Hood</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>⚾ Baseball Darts</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>🏛️ Roman Empire</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>🪙 Shove a Penny</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>🔢 Count Up</span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" class="event-checkbox" value="golf" checked>
+            <span>5️⃣ All 5's</span>
+          </label>
+                  </div>
       </div>
 
       <button class="btn" id="start-tournament-btn">Start Event Olympics 🏅</button>
@@ -520,6 +544,12 @@
     const racetrackGameCard = document.getElementById('racetrack-game-card');
     const basketballGameCard = document.getElementById('basketball-game-card');
     const golfGameCard = document.getElementById('golf-game-card');
+    const baseballGameCard = document.getElementById('baseball-game-card');
+    const romanempireGameCard = document.getElementById('romanempire-game-card');
+    const robinhoodGameCard = document.getElementById('robinhood-game-card');
+    const all5sGameCard = document.getElementById('all5s-game-card');
+    const shoveapennyGameCard = document.getElementById('shoveapenny-game-card');
+    const countupGameCard = document.getElementById('countup-game-card');
     const eventResultCard = document.getElementById('event-result-card');
 
     document.getElementById('add-player-btn').addEventListener('click', () => {
@@ -618,6 +648,12 @@
       racetrackGameCard.classList.add('hidden');
       basketballGameCard.classList.add('hidden');
       golfGameCard.classList.add('hidden');
+      robinhoodCard.classList.add('hidden');
+      romanempireGameCard.classList.add('hidden');
+      shoveapennyGameCard.classList.add('hidden');
+      countupGameCard.classList.add('hidden');
+      baseballGameCard.classList.add('hidden');
+      all5sGameCard.classList.add('hidden');
       eventResultCard.classList.remove('hidden');
 
       document.getElementById('event-winner-announcement').innerText = `Winner: ${sortedFinalResults[0].name}!`;
