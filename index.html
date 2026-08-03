@@ -1,1101 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hellcastle Olympic Hub</title>
-  <style>
-    :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e24;
-      --accent: #ff9800;
-      --accent-hover: #e08600;
-      --text: #ffffff;
-      --text-muted: #aaaaaa;
-      --segment-complete: #4caf50;
-      --gold: #ffd700;
-      --silver: #c0c0c0;
-      --bronze: #cd7f32;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darts Olympic Hub</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent-color: #4caf50;
+            --text-color: #ffffff;
+            --subtext-color: #aaaaaa;
+            --border-color: #333333;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+        .container {
+            width: 100%;
+            max-width: 800px;
+        }
 
-    h1, h2, h3 {
-      text-align: center;
-      margin-bottom: 15px;
-      color: var(--accent);
-    }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
 
-    .container {
-      width: 100%;
-      max-width: 900px;
-    }
+        .hidden {
+            display: none !important;
+        }
 
-    .card {
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
+        h1, h2, h3 {
+            text-align: center;
+            margin-top: 0;
+        }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
+        .btn:hover {
+            opacity: 0.9;
+        }
 
-    input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #444;
-      background: #111;
-      color: #fff;
-    }
+        .btn:disabled {
+            background-color: #555 !important;
+            cursor: not-allowed;
+        }
 
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-      background: #111;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid #444;
-    }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
 
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-    }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
 
-    .checkbox-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-    .btn {
-      background: var(--accent);
-      color: #000;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      width: 100%;
-      font-size: 1rem;
-      transition: background 0.2s;
-      margin-top: 5px;
-    }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--subtext-color);
+        }
 
-    .btn:hover { background: var(--accent-hover); }
-    .btn:disabled { background: #555; cursor: not-allowed; opacity: 0.6; }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: #2a2a2a;
+            color: #fff;
+            box-sizing: border-box;
+        }
 
-    .player-input-list {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            background: #2a2a2a;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
 
-    /* HUB TABLES */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
+        .active-player-banner {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffca28;
+            margin: 15px 0;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 6px;
+        }
 
-    th, td {
-      padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid #333;
-    }
+        .dart-display-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-    th { background: #2a2a32; }
+        .dart-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
 
-    .rank-1 { color: var(--gold); font-weight: bold; }
-    .rank-2 { color: var(--silver); font-weight: bold; }
-    .rank-3 { color: var(--bronze); font-weight: bold; }
+        .dart-box {
+            width: 70px;
+            height: 50px;
+            background: #2a2a2a;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
 
-    /* GAME ENGINE UI STYLES */
-    .game-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      font-size: 1.2rem;
-      border-bottom: 2px solid #444;
-      padding-bottom: 10px;
-    }
+        .turn-total {
+            font-size: 18px;
+            color: var(--subtext-color);
+        }
 
-    .active-player-banner {
-      font-size: 1.8rem;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      background: #333;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      color: #ffeb3b;
-      animation: flash 1s infinite alternate;
-    }
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-    @keyframes flash {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0.7; transform: scale(1.02); }
-    }
+        .btn-pad {
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background: #333;
+            color: #fff;
+        }
 
-    .track-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin: 20px 0;
-    }
+        .btn-pad.modifier { background: #e65100; }
+        .btn-pad.action { background: #d32f2f; }
 
-    .track-segment {
-      flex: 1;
-      background: #444;
-      border: 2px solid #666;
-      border-radius: 8px;
-      padding: 10px 5px;
-      text-align: center;
-      transition: all 0.3s;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
 
-    .track-segment.completed {
-      background: var(--segment-complete);
-      border-color: #81c784;
-      box-shadow: 0 0 10px var(--segment-complete);
-    }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-    .track-segment .seg-title {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .track-segment .seg-req {
-      font-size: 0.75rem;
-      color: #ddd;
-    }
-
-    .dart-display-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 15px 0;
-    }
-
-    .dart-display {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 10px;
-    }
-
-    .dart-box {
-      width: 70px;
-      height: 40px;
-      border: 2px dashed #666;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      border-radius: 5px;
-      background: #222;
-    }
-
-    .turn-total {
-      font-weight: bold;
-      font-size: 1.1rem;
-      color: #ffeb3b;
-    }
-
-    .controls-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-top: 15px;
-    }
-
-    .btn-pad {
-      padding: 12px 5px;
-      font-weight: bold;
-      border-radius: 5px;
-      border: none;
-      background: #444;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .btn-pad:hover { background: #666; }
-    .btn-pad.modifier { background: #0288d1; }
-    .btn-pad.modifier.active { background: #00bcd4; box-shadow: 0 0 8px #00bcd4; }
-    .btn-pad.color-white { background: #eee; color: #111; }
-    .btn-pad.color-red { background: #d32f2f; color: #fff; }
-    .btn-pad.color-green { background: #388e3c; color: #fff; }
-    .btn-pad.color-black { background: #111; color: #fff; border: 1px solid #555; }
-    .btn-pad.action { background: #f57c00; }
-
-    .score-buttons-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .golf-btn {
-      padding: 15px 10px;
-      border-radius: 8px;
-      background: #333;
-      border: 1px solid #555;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .golf-btn:hover { background: #444; border-color: var(--accent); }
-    .golf-btn.miss-btn { grid-column: span 2; background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #fca5a5; }
-
-    .advance-btn {
-      background: #388e3c;
-      color: white;
-      font-size: 1.1rem;
-      padding: 15px;
-      margin-top: 15px;
-    }
-
-    .advance-btn:hover { background: #2e7d32; }
-
-    .hidden { display: none !important; }
-  </style>
+        th {
+            color: var(--subtext-color);
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎯 Hellcastle Olympic Hub🎯 🏁</h1>
 
-    <!-- 1. ROSTER & EVENT SETUP CARD -->
-    <div id="roster-card" class="card">
-      <h2>1. Tournament Setup</h2>
-      <div class="form-group">
-        <label>Players:</label>
-        <div id="player-inputs">
-          <div class="player-input-list"><input type="text" class="player-name" value="Alice"></div>
-          <div class="player-input-list"><input type="text" class="player-name" value="Bob"></div>
-          <div class="player-input-list"><input type="text" class="player-name" value="Charlie"></div>
+<div class="container">
+
+    <!-- 1. DASHBOARD HUB -->
+    <div id="dashboard-card" class="card">
+        <h1>🎯 Darts Olympic Hub 🎯</h1>
+        <div id="hub-leaderboard-section">
+            <h3>Overall Tournament Standings</h3>
+            <table>
+                <thead>
+                    <tr><th>Rank</th><th>Player</th><th>Total Olympic Pts</th></tr>
+                </thead>
+                <tbody id="hub-scoreboard-body">
+                    <tr><td colspan="3" style="text-align:center;">No active tournament started.</td></tr>
+                </tbody>
+            </table>
         </div>
-        <button type="button" class="btn" id="add-player-btn" style="background:#444; color:#fff;">+ Add Player</button>
-      </div>
-
-      <!-- EVENT INCLUSION SELECTION -->
-      <div class="form-group" style="margin-top: 20px;">
-        <label>Select Included Olympic Events:</label>
-        <div class="checkbox-group">
-          <label class="checkbox-item">
-            <input type="checkbox" class="event-checkbox" value="racetrack" checked>
-            <span>🏁 Race Track #1</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" class="event-checkbox" value="basketball" checked>
-            <span>🏀 Basketball Darts</span>
-          </label>
-          <label class="checkbox-item">
-            <input type="checkbox" class="event-checkbox" value="golf" checked>
-            <span>⛳ Golf Darts</span>
-            <label class="checkbox-item">
-    <input type="checkbox" class="event-checkbox" value="roman" checked>
-    <span>🏛️ Roman Empire</span>
-</label>
-          </label>
+        <button class="btn" style="margin-top:20px;" onclick="showRosterCard()">⚙️ Setup New Tournament</button>
+        
+        <div id="included-events-launcher" style="margin-top: 30px;">
+            <!-- Event Launch Buttons Auto-Generated Here -->
         </div>
-      </div>
-
-      <button class="btn" id="start-tournament-btn">Start Event Olympics 🏅</button>
     </div>
 
-    <!-- 2. HUB DASHBOARD & STANDINGS -->
-    <div id="dashboard-card" class="card hidden">
-      <h2>Olympic Standings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Olympic Points</th>
-            <th>Events Played</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body"></tbody>
-      </table>
+    <!-- 2. ROSTER & EVENT SELECTION CARD -->
+    <div id="roster-card" class="card hidden">
+        <h2>Tournament Roster & Events</h2>
+        <div class="form-group">
+            <label>Add Players (Comma Separated):</label>
+            <input type="text" id="player-names-input" placeholder="e.g. Alice, Bob, Charlie">
+        </div>
+        
+        <h3>Select Included Events:</h3>
+        <div class="checkbox-group">
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="racetrack" checked>
+                <span>🏁 Race Track #1</span>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="basketball" checked>
+                <span>🏀 Basketball Darts</span>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="golf" checked>
+                <span>⛳ Golf Darts</span>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" class="event-checkbox" value="roman" checked>
+                <span>🏛️ Roman Empire</span>
+            </label>
+        </div>
 
-      <h3 style="margin-top:25px;">Included Events Launcher</h3>
-      <div id="included-events-container">
-        <!-- Dynamically rendered based on chosen events -->
-      </div>
+        <button class="btn" onclick="startTournament()">🚀 Confirm Setup & Launch Hub</button>
     </div>
 
     <!-- 3. EMBEDDED GAME ENGINE: RACE TRACK #1 -->
     <div id="racetrack-game-card" class="card hidden">
-      <h2>🏁 Race Track #1 🏁</h2>
-      <div class="game-header">
-        <div>Round: <span id="round-num">1</span></div>
-        <div>Target Laps: <span id="target-laps">2</span></div>
-      </div>
-
-      <div id="active-player-banner" class="active-player-banner">PLAYER 1's TURN</div>
-
-      <h3>Current Lap Progress</h3>
-      <div class="track-container">
-        <div class="track-segment" id="seg-1"><div class="seg-title">Seg 1</div><div class="seg-req">30 Pts</div></div>
-        <div class="track-segment" id="seg-2"><div class="seg-title">Seg 2</div><div class="seg-req">51 Pts</div></div>
-        <div class="track-segment" id="seg-3"><div class="seg-title">Seg 3</div><div class="seg-req">75+ Pts</div></div>
-        <div class="track-segment" id="seg-4"><div class="seg-title">Seg 4</div><div class="seg-req">Same Color</div></div>
-        <div class="track-segment" id="seg-5"><div class="seg-title">Seg 5</div><div class="seg-req">130 (6 Darts)</div></div>
-        <div class="track-segment" id="seg-6"><div class="seg-title">Seg 6</div><div class="seg-req">175 (9 Darts)</div></div>
-      </div>
-
-      <div class="dart-display-container">
-        <div class="dart-display">
-          <div class="dart-box" id="dart-1">-</div>
-          <div class="dart-box" id="dart-2">-</div>
-          <div class="dart-box" id="dart-3">-</div>
-        </div>
-        <div class="turn-total">Turn Total: <span id="turn-total-score">0</span></div>
-      </div>
-
-      <div class="controls-grid">
-        <button class="btn-pad modifier" id="btn-double">DOUBLE</button>
-        <button class="btn-pad modifier" id="btn-triple">TRIPLE</button>
-        <button class="btn-pad action" id="btn-miss">MISS (0)</button>
-        <button class="btn-pad action" id="btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
-        <div id="number-buttons" style="display: contents;"></div>
-        <button class="btn-pad color-btn color-white" data-color="white">WHITE</button>
-        <button class="btn-pad color-btn color-red" data-color="red">RED</button>
-        <button class="btn-pad color-btn color-green" data-color="green">GREEN</button>
-        <button class="btn-pad color-btn color-black" data-color="black">BLACK</button>
-      </div>
-
-      <button class="btn advance-btn" id="btn-advance-turn" disabled>Advance Turn ➡️</button>
-
-      <h3 style="margin-top:25px;">Current Match Standings</h3>
-      <table>
-        <thead>
-          <tr><th>Player</th><th>Laps Completed</th><th>Current Segment</th><th>Total Rounds</th></tr>
-        </thead>
-        <tbody id="scoreboard-body"></tbody>
-      </table>
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>🏁 Race Track #1 🏁</h2>
+        <!-- Race Track logic UI here -->
     </div>
 
     <!-- 4. EMBEDDED GAME ENGINE: BASKETBALL DARTS -->
     <div id="basketball-game-card" class="card hidden">
-      <h2>🏀 Basketball Darts 🏀</h2>
-      <div class="game-header">
-        <div>Quarter: <span id="bb-quarter">Q1</span> / 4</div>
-        <div>Possession: <span id="bb-possession">1</span> / 6</div>
-      </div>
-
-      <div id="bb-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
-
-      <div class="dart-display-container">
-        <div class="dart-display">
-          <div class="dart-box" id="bb-dart-1">-</div>
-          <div class="dart-box" id="bb-dart-2">-</div>
-          <div class="dart-box" id="bb-dart-3">-</div>
-        </div>
-        <div class="turn-total">Possession Points: <span id="bb-turn-score">0</span></div>
-      </div>
-
-      <p style="text-align: center; margin-bottom: 8px; font-weight: bold; color: var(--text-muted);">Select Shot Hit:</p>
-      <div class="controls-grid" id="bb-segment-buttons"></div>
-
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn-pad action" id="bb-btn-miss" style="flex:1;">MISS (0)</button>
-        <button class="btn-pad action" id="bb-btn-undo" style="flex:1; background:#d32f2f;">UNDO DART</button>
-      </div>
-
-      <button class="btn advance-btn" id="bb-btn-advance" disabled onclick="advanceBasketballTurn()">Advance Turn ➡️</button>
-
-      <h3 style="margin-top:25px;">Live Match Scoreboard</h3>
-      <table>
-        <thead>
-          <tr><th>Player</th><th>Total Points</th><th>Current Quarter</th></tr>
-        </thead>
-        <tbody id="bb-scoreboard-body"></tbody>
-      </table>
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>🏀 Basketball Darts 🏀</h2>
+        <!-- Basketball logic UI here -->
     </div>
 
     <!-- 5. EMBEDDED GAME ENGINE: GOLF DARTS -->
     <div id="golf-game-card" class="card hidden">
-      <h2>⛳ Golf Darts ⛳</h2>
-      <div class="game-header">
-        <div>Hole: <span id="golf-current-hole">1</span> / <span id="golf-total-holes">9</span></div>
-        <div>Target Segment: <strong style="color: var(--accent);" id="golf-target-segment">1</strong></div>
-      </div>
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>⛳ Golf Darts ⛳</h2>
+        <!-- Golf logic UI here -->
+    </div>
 
-      <div id="golf-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
-
-      <div class="dart-display-container">
-        <div class="dart-display">
-          <div class="dart-box" id="golf-dart-1">-</div>
-          <div class="dart-box" id="golf-dart-2">-</div>
-          <div class="dart-box" id="golf-dart-3">-</div>
+    <!-- 6. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
+    <div id="roman-game-card" class="card hidden">
+        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+        <h2>🏛️ Roman Empire 🏛️</h2>
+        <div class="game-header">
+            <div>Campaign Round: <span id="roman-round-num">1</span></div>
+            <div>Target Score: <span id="roman-target-display">500</span></div>
         </div>
-        <div class="turn-total">Hole Score Kept: <span id="golf-best-score">5 (Bogey)</span></div>
-      </div>
+        <div id="roman-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
 
-      <p style="text-align: center; margin-bottom: 8px; font-weight: bold; color: var(--text-muted);">Record Dart Hit:</p>
-      <div class="score-buttons-grid">
-        <button class="golf-btn" onclick="recordGolfDart(1, 'Double (1 pt)')"><span>Double Ring</span><small style="opacity: 0.7;">1 pt (Hole-in-One)</small></button>
-        <button class="golf-btn" onclick="recordGolfDart(2, 'Triple (2 pts)')"><span>Triple Ring</span><small style="opacity: 0.7;">2 pts (Eagle)</small></button>
-        <button class="golf-btn" onclick="recordGolfDart(3, 'Inner Single (3 pts)')"><span>Inner Single</span><small style="opacity: 0.7;">3 pts (Birdie)</small></button>
-        <button class="golf-btn" onclick="recordGolfDart(4, 'Outer Single (4 pts)')"><span>Outer Single</span><small style="opacity: 0.7;">4 pts (Par)</small></button>
-        <button class="golf-btn miss-btn" onclick="recordGolfDart(5, 'Miss (5 pts)')"><span>Miss / Wrong Ring</span><small>5 pts (Bogey)</small></button>
-      </div>
+        <div class="dart-display-container">
+            <div class="dart-display">
+                <div class="dart-box" id="roman-dart-1">-</div>
+                <div class="dart-box" id="roman-dart-2">-</div>
+                <div class="dart-box" id="roman-dart-3">-</div>
+            </div>
+            <div class="turn-total">Turn Score: <span id="roman-turn-score">0</span></div>
+        </div>
 
-      <div style="display: flex; gap: 10px; margin-top: 15px;">
-        <button class="btn-pad action" id="golf-btn-undo" style="flex:1; background:#d32f2f;">UNDO DART</button>
-      </div>
+        <div class="controls-grid">
+            <button class="btn-pad modifier" id="roman-btn-double">DOUBLE</button>
+            <button class="btn-pad modifier" id="roman-btn-triple">TRIPLE</button>
+            <button class="btn-pad action" id="roman-btn-miss">MISS (0)</button>
+            <button class="btn-pad action" id="roman-btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
+            <div id="roman-number-buttons" style="display: contents;"></div>
+        </div>
 
-      <button class="btn advance-btn" id="golf-btn-advance" disabled onclick="advanceGolfTurn()">Advance Turn ➡️</button>
+        <button class="btn advance-btn" id="roman-btn-advance" disabled onclick="advanceRomanTurn()">Advance Turn ➡️</button>
 
-      <h3 style="margin-top:25px;">Golf Scorecard (Lowest Score Wins)</h3>
-      <table>
-        <thead>
-          <tr><th>Player</th><th>Total Score</th><th>Current Hole Score</th></tr>
-        </thead>
-        <tbody id="golf-scoreboard-body"></tbody>
-      </table>
+        <h3 style="margin-top:25px;">Empire Standings</h3>
+        <table>
+            <thead>
+                <tr><th>Player</th><th>Total Conquest Score</th></tr>
+            </thead>
+            <tbody id="roman-scoreboard-body"></tbody>
+        </table>
     </div>
 
-    <!-- 6. EVENT OVERLAY REWARD SCREEN -->
+    <!-- 7. EVENT RESULT CARD -->
     <div id="event-result-card" class="card hidden">
-      <h2>🏆 Event Finished! 🏆</h2>
-      <div id="event-winner-announcement" style="text-align: center; font-size: 1.5rem; margin: 15px 0; color: #ffeb3b;"></div>
-      
-      <h3>Event Placements & Awarded Olympic Points</h3>
-      <table>
-        <thead>
-          <tr><th>Placement</th><th>Player</th><th>Grand Prix Points</th></tr>
-        </thead>
-        <tbody id="event-points-body"></tbody>
-      </table>
-      <br>
-      <button class="btn" onclick="returnToDashboard()">Return to Hub Standings 📊</button>
+        <h2>🎉 Event Finished! 🎉</h2>
+        <div id="event-rankings-display"></div>
+        <button class="btn" style="margin-top:20px;" onclick="returnToDashboard()">Return to Olympic Hub</button>
     </div>
-  </div>
 
-  <script>
-    /* ==========================================================
-       HUB STATE & MANAGEMENT
-       ========================================================== */
-    let tournamentPlayers = []; 
+</div>
+
+<script>
+    // Global App State
+    let players = [];
     let selectedEvents = [];
-    const pointsMap = [10, 7, 5, 3, 2, 1];
+    let overallStandings = {};
 
-    const rosterCard = document.getElementById('roster-card');
+    // DOM Elements
     const dashboardCard = document.getElementById('dashboard-card');
+    const rosterCard = document.getElementById('roster-card');
     const racetrackGameCard = document.getElementById('racetrack-game-card');
     const basketballGameCard = document.getElementById('basketball-game-card');
     const golfGameCard = document.getElementById('golf-game-card');
+    const romanGameCard = document.getElementById('roman-game-card');
     const eventResultCard = document.getElementById('event-result-card');
 
-    document.getElementById('add-player-btn').addEventListener('click', () => {
-      const container = document.getElementById('player-inputs');
-      const count = container.children.length + 1;
-      const div = document.createElement('div');
-      div.className = 'player-input-list';
-      div.innerHTML = `<input type="text" class="player-name" value="Player ${count}">`;
-      container.appendChild(div);
-    });
+    function showRosterCard() {
+        dashboardCard.classList.add('hidden');
+        rosterCard.classList.remove('hidden');
+    }
 
-    document.getElementById('start-tournament-btn').addEventListener('click', () => {
-      const inputs = document.querySelectorAll('.player-name');
-      const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n !== '');
-      if (names.length < 2) return alert('Please enter at least 2 players.');
+    function startTournament() {
+        const input = document.getElementById('player-names-input').value;
+        players = input.split(',').map(name => name.trim()).filter(name => name.length > 0);
+        
+        if (players.length === 0) {
+            alert('Please enter at least one player name!');
+            return;
+        }
 
-      const checkedBoxes = document.querySelectorAll('.event-checkbox:checked');
-      selectedEvents = Array.from(checkedBoxes).map(cb => cb.value);
+        const checkboxes = document.querySelectorAll('.event-checkbox:checked');
+        selectedEvents = Array.from(checkboxes).map(cb => cb.value);
 
-      if (selectedEvents.length === 0) {
-        return alert('Please select at least one event to include in the tournament.');
-      }
-      
-      tournamentPlayers = names.map(name => ({ name: name, points: 0, eventsPlayed: 0 }));
-      rosterCard.classList.add('hidden');
-      dashboardCard.classList.remove('hidden');
-      renderIncludedEventsUI();
-      renderHubLeaderboard();
-    });
+        if (selectedEvents.length === 0) {
+            alert('Please select at least one event!');
+            return;
+        }
 
-    function renderIncludedEventsUI() {
-      const container = document.getElementById('included-events-container');
-      container.innerHTML = '';
+        // Initialize Standings
+        overallStandings = {};
+        players.forEach(p => overallStandings[p] = 0);
 
-      if (selectedEvents.includes('racetrack')) {
-        const div = document.createElement('div');
-        div.className = 'form-group';
-        div.style.marginTop = '15px';
-        div.innerHTML = `
-          <label for="laps-input">Race Track Target Laps:</label>
-          <input type="number" id="laps-input" min="1" max="10" value="2">
-          <button class="btn" style="margin-top:8px;" onclick="launchRaceTrack()">🏁 Launch Event: Race Track #1</button>
-        `;
-        container.appendChild(div);
-      }
+        rosterCard.classList.add('hidden');
+        dashboardCard.classList.remove('hidden');
 
-      if (selectedEvents.includes('basketball')) {
-        const div = document.createElement('div');
-        div.className = 'form-group';
-        div.style.marginTop = '20px';
-        div.innerHTML = `
-          <label for="bb-board-type">Basketball Board Type:</label>
-          <select id="bb-board-type">
-            <option value="basic">Basic Board (Bull=6, D=5, T=4, Outer=3, Inner=2)</option>
-            <option value="quad">Quad Board (Bull=10, D=9, T=7, Quad=5, Outer=4, Mid=3, Inner=2)</option>
-          </select>
-          <button class="btn" style="background: #2196F3; color: white; margin-top:8px;" onclick="launchBasketball()">🏀 Launch Event: Basketball Darts</button>
-        `;
-        container.appendChild(div);
-      }
-      if (selectedEvents.includes('roman')) {
-    const div = document.createElement('div');
-    div.className = 'form-group';
-    div.style.marginTop = '20px';
-    div.innerHTML = `
-        <label for="roman-target-score">Roman Empire Target Score / Conquest Goal:</label> <select id="roman-target-score"> <option value="300">300 Points (Short Campaign)</option> <option value="500" selected>500 Points (Standard Empire)</option> <option value="700">700 Points (Grand Conquest)</option> </select> <button class="btn" style="background: #8b0000; color: white; margin-top:8px;" onclick="launchRomanEmpire()">🏛️ Launch Event: Roman Empire</button> `;
-    container.appendChild(div);
-}
-
-      if (selectedEvents.includes('golf')) {
-        const div = document.createElement('div');
-        div.className = 'form-group';
-        div.style.marginTop = '20px';
-        div.innerHTML = `
-          <label for="golf-holes-input">Golf Darts Game Mode:</label>
-          <select id="golf-holes-input">
-            <option value="9">9 Holes (Holes 1–9)</option>
-            <option value="18">18 Holes (Holes 1–18)</option>
-          </select>
-          <button class="btn" style="background: #2e7d32; color: white; margin-top:8px;" onclick="launchGolf()">⛳ Launch Event: Golf Darts</button>
-        `;
-        container.appendChild(div);
-      }
+        renderHubLeaderboard();
+        renderIncludedEventsUI();
     }
 
     function renderHubLeaderboard() {
-      tournamentPlayers.sort((a, b) => b.points - a.points);
-      const body = document.getElementById('leaderboard-body');
-      body.innerHTML = '';
-      tournamentPlayers.forEach((p, idx) => {
-        const tr = document.createElement('tr');
-        let rankClass = idx === 0 ? 'rank-1' : idx === 1 ? 'rank-2' : idx === 2 ? 'rank-3' : '';
-        tr.innerHTML = `
-          <td class="${rankClass}">#${idx + 1}</td>
-          <td>${p.name}</td>
-          <td><strong>${p.points} pts</strong></td>
-          <td>${p.eventsPlayed}</td>
-        `;
-        body.appendChild(tr);
-      });
-    }
+        const tbody = document.getElementById('hub-scoreboard-body');
+        tbody.innerHTML = '';
 
-    function onEventFinished(sortedFinalResults) {
-      racetrackGameCard.classList.add('hidden');
-      basketballGameCard.classList.add('hidden');
-      golfGameCard.classList.add('hidden');
-      eventResultCard.classList.remove('hidden');
+        const sorted = Object.entries(overallStandings).sort((a, b) => b[1] - a[1]);
 
-      document.getElementById('event-winner-announcement').innerText = `Winner: ${sortedFinalResults[0].name}!`;
-      const pointsBody = document.getElementById('event-points-body');
-      pointsBody.innerHTML = '';
-
-      sortedFinalResults.forEach((result, idx) => {
-        const ptsAwarded = pointsMap[idx] || 1;
-        const playerObj = tournamentPlayers.find(p => p.name === result.name);
-        if (playerObj) {
-          playerObj.points += ptsAwarded;
-          playerObj.eventsPlayed += 1;
+        if (sorted.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No active tournament started.</td></tr>';
+            return;
         }
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>#${idx + 1}</td>
-          <td>${result.name}</td>
-          <td><strong>+${ptsAwarded} pts</strong></td>
-        `;
-        pointsBody.appendChild(tr);
-      });
+        sorted.forEach(([player, score], index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${index + 1}</td><td><strong>${player}</strong></td><td>${score} pts</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderIncludedEventsUI() {
+        const container = document.getElementById('included-events-launcher');
+        container.innerHTML = '<h3>Available Olympic Events</h3>';
+
+        if (selectedEvents.includes('roman')) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            div.style.marginTop = '20px';
+            div.innerHTML = `
+                <label for="roman-target-score">Roman Empire Conquest Goal:</label>
+                <select id="roman-target-score">
+                    <option value="300">300 Points (Short Campaign)</option>
+                    <option value="500" selected>500 Points (Standard Empire)</option>
+                    <option value="700">700 Points (Grand Conquest)</option>
+                </select>
+                <button class="btn" style="background: #8b0000; color: white; margin-top:8px;" onclick="launchRomanEmpire()">🏛️ Launch Event: Roman Empire</button>
+            `;
+            container.appendChild(div);
+        }
     }
 
     function returnToDashboard() {
-      eventResultCard.classList.add('hidden');
-      dashboardCard.classList.remove('hidden');
-      renderHubLeaderboard();
+        racetrackGameCard.classList.add('hidden');
+        basketballGameCard.classList.add('hidden');
+        golfGameCard.classList.add('hidden');
+        romanGameCard.classList.add('hidden');
+        eventResultCard.classList.add('hidden');
+        dashboardCard.classList.remove('hidden');
+        renderHubLeaderboard();
     }
 
-    /* ==========================================================
-       EMBEDDED GAME ENGINE: RACE TRACK #1
-       ========================================================== */
-    let totalLaps = 2;
-    let rtPlayers = [];
-    let rtCurrentPlayerIndex = 0;
-    let rtCurrentRound = 1;
-    let isDouble = false;
-    let isTriple = false;
-
-    const numberButtonsContainer = document.getElementById('number-buttons');
-    const activePlayerBanner = document.getElementById('active-player-banner');
-    const roundNumDisplay = document.getElementById('round-num');
-    const targetLapsDisplay = document.getElementById('target-laps');
-    const turnTotalScoreDisplay = document.getElementById('turn-total-score');
-    const btnDouble = document.getElementById('btn-double');
-    const btnTriple = document.getElementById('btn-triple');
-    const btnMiss = document.getElementById('btn-miss');
-    const btnUndo = document.getElementById('btn-undo');
-    const btnAdvanceTurn = document.getElementById('btn-advance-turn');
-    const colorButtons = document.querySelectorAll('.color-btn');
-
-    for (let i = 1; i <= 20; i++) createNumButton(i, i.toString());
-    createNumButton(50, 'BULL');
-
-    function createNumButton(val, label) {
-      const btn = document.createElement('button');
-      btn.className = 'btn-pad num-btn';
-      btn.innerText = label;
-      btn.dataset.value = val;
-      btn.addEventListener('click', () => handleDartInput({ type: 'number', value: val }));
-      numberButtonsContainer.appendChild(btn);
+    // Launchers
+    function launchRomanEmpire() {
+        const targetVal = parseInt(document.getElementById('roman-target-score').value) || 500;
+        document.getElementById('roman-target-display').innerText = targetVal;
+        
+        dashboardCard.classList.add('hidden');
+        romanGameCard.classList.remove('hidden');
     }
 
-    function launchRaceTrack() {
-      totalLaps = parseInt(document.getElementById('laps-input').value) || 2;
-      targetLapsDisplay.innerText = totalLaps;
-
-      rtPlayers = tournamentPlayers.map(p => ({
-        name: p.name,
-        lapsCompleted: 0,
-        currentSegment: 1,
-        totalRounds: 0,
-        currentDarts: [],
-        seg5Darts: 0, seg5Score: 0, seg6Darts: 0, seg6Score: 0, seg4Color: null
-      }));
-
-      rtCurrentPlayerIndex = 0;
-      rtCurrentRound = 1;
-      dashboardCard.classList.add('hidden');
-      racetrackGameCard.classList.remove('hidden');
-      updateRTUI();
+    function advanceRomanTurn() {
+        // Roman Engine Turn Advance Logic
     }
-
-    btnDouble.addEventListener('click', () => { isDouble = !isDouble; if (isDouble) isTriple = false; updateModifiers(); });
-    btnTriple.addEventListener('click', () => { isTriple = !isTriple; if (isTriple) isDouble = false; updateModifiers(); });
-    colorButtons.forEach(btn => btn.addEventListener('click', () => handleDartInput({ type: 'color', value: btn.dataset.color })));
-    btnMiss.addEventListener('click', () => handleDartInput({ type: 'miss', value: 0 }));
-    btnUndo.addEventListener('click', undoDart);
-    btnAdvanceTurn.addEventListener('click', advanceRTTurn);
-
-    function updateModifiers() {
-      btnDouble.classList.toggle('active', isDouble);
-      btnTriple.classList.toggle('active', isTriple);
-    }
-
-    function handleDartInput(dart) {
-      const p = rtPlayers[rtCurrentPlayerIndex];
-      if (p.currentDarts.length >= 3) return;
-
-      let mult = isDouble ? 2 : isTriple ? 3 : 1;
-      let calcScore = dart.type === 'number' ? dart.value * mult : 0;
-
-      p.currentDarts.push({ ...dart, multiplier: mult, calculatedScore: calcScore });
-      isDouble = false; isTriple = false;
-      updateModifiers();
-      updateRTTurnDisplay();
-    }
-
-    function undoDart() {
-      const p = rtPlayers[rtCurrentPlayerIndex];
-      if (p.currentDarts.length > 0) { p.currentDarts.pop(); updateRTTurnDisplay(); }
-    }
-
-    function updateRTTurnDisplay() {
-      const p = rtPlayers[rtCurrentPlayerIndex];
-      const darts = p.currentDarts;
-      document.getElementById('dart-1').innerText = formatDart(darts[0]);
-      document.getElementById('dart-2').innerText = formatDart(darts[1]);
-      document.getElementById('dart-3').innerText = formatDart(darts[2]);
-
-      const sum = darts.reduce((a, b) => a + (b.calculatedScore || 0), 0);
-      turnTotalScoreDisplay.innerText = sum;
-      btnAdvanceTurn.disabled = darts.length < 3;
-    }
-
-    function formatDart(d) {
-      if (!d) return '-';
-      if (d.type === 'miss') return 'MISS';
-      if (d.type === 'color') return d.value.toUpperCase();
-      let prefix = d.multiplier === 2 ? 'D' : d.multiplier === 3 ? 'T' : '';
-      return `${prefix}${d.value}`;
-    }
-
-    function advanceRTTurn() {
-      const p = rtPlayers[rtCurrentPlayerIndex];
-      p.totalRounds++;
-      evaluatePlayerSegmentProgress(p);
-
-      p.currentDarts = [];
-      rtCurrentPlayerIndex++;
-
-      if (rtCurrentPlayerIndex >= rtPlayers.length) {
-        rtCurrentPlayerIndex = 0;
-        rtCurrentRound++;
-      }
-
-      const winner = rtPlayers.find(pl => pl.lapsCompleted >= totalLaps);
-      if (winner) {
-        const sorted = [...rtPlayers].sort((a, b) => {
-          if (b.lapsCompleted !== a.lapsCompleted) return b.lapsCompleted - a.lapsCompleted;
-          if (b.currentSegment !== a.currentSegment) return b.currentSegment - a.currentSegment;
-          return a.totalRounds - b.totalRounds;
-        });
-        onEventFinished(sorted);
-        return;
-      }
-
-      updateRTUI();
-    }
-
-    function evaluatePlayerSegmentProgress(p) {
-      for (let d of p.currentDarts) {
-        if (p.currentSegment === 1 && d.calculatedScore >= 30) advanceSegment(p);
-        else if (p.currentSegment === 2 && d.calculatedScore === 51) advanceSegment(p);
-        else if (p.currentSegment === 3 && d.calculatedScore >= 75) advanceSegment(p);
-        else if (p.currentSegment === 4 && d.type === 'color') {
-          if (!p.seg4Color) p.seg4Color = d.value;
-          else if (p.seg4Color === d.value) advanceSegment(p);
-        } else if (p.currentSegment === 5) {
-          p.seg5Darts++; p.seg5Score += d.calculatedScore;
-          if (p.seg5Score >= 130 && p.seg5Darts <= 6) advanceSegment(p);
-          else if (p.seg5Darts >= 6) { p.seg5Darts = 0; p.seg5Score = 0; }
-        } else if (p.currentSegment === 6) {
-          p.seg6Darts++; p.seg6Score += d.calculatedScore;
-          if (p.seg6Score >= 175 && p.seg6Darts <= 9) {
-            p.lapsCompleted++; p.currentSegment = 1; p.seg6Darts = 0; p.seg6Score = 0;
-          } else if (p.seg6Darts >= 9) { p.seg6Darts = 0; p.seg6Score = 0; }
-        }
-      }
-    }
-
-    function advanceSegment(p) { p.currentSegment++; p.seg4Color = null; p.seg5Darts = 0; p.seg5Score = 0; }
-
-    function updateRTUI() {
-      roundNumDisplay.innerText = rtCurrentRound;
-      const p = rtPlayers[rtCurrentPlayerIndex];
-      activePlayerBanner.innerText = `${p.name.toUpperCase()}'S TURN`;
-
-      for (let i = 1; i <= 6; i++) {
-        document.getElementById(`seg-${i}`).classList.toggle('completed', i < p.currentSegment);
-      }
-
-      updateRTTurnDisplay();
-      renderRTScoreboard();
-    }
-
-    function renderRTScoreboard() {
-      const body = document.getElementById('scoreboard-body');
-      body.innerHTML = '';
-      rtPlayers.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><strong>${p.name}</strong></td><td>${p.lapsCompleted} / ${totalLaps}</td><td>Seg ${p.currentSegment}</td><td>${p.totalRounds}</td>`;
-        body.appendChild(tr);
-      });
-    }
-
-    /* ==========================================================
-       EMBEDDED GAME ENGINE: BASKETBALL DARTS
-       ========================================================== */
-    const BB_SCORING = {
-      basic: [
-        { label: 'Bull (6)', pts: 6 }, { label: 'Double (5)', pts: 5 }, { label: 'Triple (4)', pts: 4 },
-        { label: 'Outer Single (3)', pts: 3 }, { label: 'Inner Single (2)', pts: 2 }
-      ],
-      quad: [
-        { label: 'Bull (10)', pts: 10 }, { label: 'Double (9)', pts: 9 }, { label: 'Triple (7)', pts: 7 },
-        { label: 'Quad (5)', pts: 5 }, { label: 'Outer Single (4)', pts: 4 }, { label: 'Middle Single (3)', pts: 3 }, { label: 'Inner Single (2)', pts: 2 }
-      ]
-    };
-
-    let bbState = { boardType: 'basic', players: [], currentPlayerIndex: 0, quarter: 1, possession: 1, currentTurnDarts: [] };
-
-    function launchBasketball() {
-      bbState.boardType = document.getElementById('bb-board-type').value;
-      bbState.players = tournamentPlayers.map(p => ({ name: p.name, totalPoints: 0, quarterPoints: 0 }));
-      bbState.currentPlayerIndex = 0; bbState.quarter = 1; bbState.possession = 1; bbState.currentTurnDarts = [];
-
-      renderBasketballButtons();
-      dashboardCard.classList.add('hidden');
-      basketballGameCard.classList.remove('hidden');
-      updateBasketballUI();
-    }
-
-    function renderBasketballButtons() {
-      const container = document.getElementById('bb-segment-buttons');
-      container.innerHTML = '';
-      BB_SCORING[bbState.boardType].forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-pad color-btn color-white';
-        btn.innerText = opt.label;
-        btn.onclick = () => recordBasketballDart(opt.pts);
-        container.appendChild(btn);
-      });
-    }
-
-    document.getElementById('bb-btn-miss').addEventListener('click', () => recordBasketballDart(0));
-    document.getElementById('bb-btn-undo').addEventListener('click', undoBasketballDart);
-
-    function recordBasketballDart(pts) {
-      if (bbState.currentTurnDarts.length >= 3) return;
-      bbState.currentTurnDarts.push(pts);
-      updateBasketballTurnDisplay();
-    }
-
-    function undoBasketballDart() {
-      if (bbState.currentTurnDarts.length > 0) { bbState.currentTurnDarts.pop(); updateBasketballTurnDisplay(); }
-    }
-
-    function updateBasketballTurnDisplay() {
-      const darts = bbState.currentTurnDarts;
-      document.getElementById('bb-dart-1').innerText = darts[0] !== undefined ? darts[0] : '-';
-      document.getElementById('bb-dart-2').innerText = darts[1] !== undefined ? darts[1] : '-';
-      document.getElementById('bb-dart-3').innerText = darts[2] !== undefined ? darts[2] : '-';
-
-      const sum = darts.reduce((a, b) => a + b, 0);
-      document.getElementById('bb-turn-score').innerText = sum;
-      document.getElementById('bb-btn-advance').disabled = darts.length < 3;
-    }
-
-    function advanceBasketballTurn() {
-      const turnTotal = bbState.currentTurnDarts.reduce((a, b) => a + b, 0);
-      const player = bbState.players[bbState.currentPlayerIndex];
-      player.totalPoints += turnTotal; player.quarterPoints += turnTotal;
-      bbState.currentTurnDarts = [];
-
-      bbState.currentPlayerIndex++;
-      if (bbState.currentPlayerIndex >= bbState.players.length) {
-        bbState.currentPlayerIndex = 0;
-        bbState.possession++;
-        if (bbState.possession > 6) {
-          bbState.possession = 1; bbState.quarter++;
-          bbState.players.forEach(p => p.quarterPoints = 0);
-        }
-      }
-
-      if (bbState.quarter > 4) {
-        const finalResults = [...bbState.players].sort((a, b) => b.totalPoints - a.totalPoints);
-        onEventFinished(finalResults);
-        return;
-      }
-
-      updateBasketballUI();
-    }
-
-    function updateBasketballUI() {
-      document.getElementById('bb-quarter').innerText = `Q${bbState.quarter}`;
-      document.getElementById('bb-possession').innerText = bbState.possession;
-      const activePlayer = bbState.players[bbState.currentPlayerIndex];
-      document.getElementById('bb-active-banner').innerText = `${activePlayer.name.toUpperCase()}'S TURN`;
-
-      updateBasketballTurnDisplay();
-      renderBasketballScoreboard();
-    }
-
-    function renderBasketballScoreboard() {
-      const body = document.getElementById('bb-scoreboard-body');
-      body.innerHTML = '';
-      bbState.players.forEach(p => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><strong>${p.name}</strong></td><td>${p.totalPoints} pts</td><td>${p.quarterPoints} pts</td>`;
-        body.appendChild(tr);
-      });
-    }
-    <!-- 6. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
-<div id="roman-game-card" class="card hidden">
-    <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
-    <h2>🏛️ Roman Empire 🏛️</h2>
-    <div class="game-header">
-        <div>Campaign Round: <span id="roman-round-num">1</span></div>
-        <div>Target Empire Score: <span id="roman-target-display">500</span></div>
-    </div>
-    <div id="roman-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
-
-    <div class="dart-display-container">
-        <div class="dart-display">
-            <div class="dart-box" id="roman-dart-1">-</div>
-            <div class="dart-box" id="roman-dart-2">-</div>
-            <div class="dart-box" id="roman-dart-3">-</div>
-        </div>
-        <div class="turn-total">Turn Conquest Score: <span id="roman-turn-score">0</span></div>
-    </div>
-
-    <!-- Controls / Scoring Grid -->
-    <div class="controls-grid">
-        <button class="btn-pad modifier" id="roman-btn-double">DOUBLE</button>
-        <button class="btn-pad modifier" id="roman-btn-triple">TRIPLE</button>
-        <button class="btn-pad action" id="roman-btn-miss">MISS (0)</button>
-        <button class="btn-pad action" id="roman-btn-undo" style="grid-column: span 2; background:#d32f2f;">UNDO</button>
-        <div id="roman-number-buttons" style="display: contents;"></div>
-    </div>
-
-    <button class="btn advance-btn" id="roman-btn-advance" disabled onclick="advanceRomanTurn()">Advance Turn ➡️</button>
-
-    <h3 style="margin-top:25px;">Empire Standings</h3>
-    <table>
-        <thead>
-            <tr><th>Player</th><th>Total Conquest Score</th><th>Current Rank</th></tr>
-        </thead>
-        <tbody id="roman-scoreboard-body"></tbody>
-    </table>
-</div>
-
-    /* ==========================================================
-       EMBEDDED GAME ENGINE: GOLF DARTS
-       ========================================================== */
-    let golfState = { totalHoles: 9, currentHole: 1, currentPlayerIndex: 0, players: [] };
-
-    function launchGolf() {
-      const holesInput = parseInt(document.getElementById('golf-holes-input').value) || 9;
-      golfState.totalHoles = holesInput;
-      golfState.currentHole = 1;
-      golfState.currentPlayerIndex = 0;
-      golfState.players = tournamentPlayers.map(p => ({ name: p.name, totalScore: 0, currentHoleDarts: [], holeScores: [] }));
-
-      document.getElementById('golf-btn-undo').onclick = undoGolfDart;
-      dashboardCard.classList.add('hidden');
-      golfGameCard.classList.remove('hidden');
-      updateGolfUI();
-    }
-
-    function recordGolfDart(score, label) {
-      const player = golfState.players[golfState.currentPlayerIndex];
-      if (player.currentHoleDarts.length >= 3) return;
-      player.currentHoleDarts.push({ score, label });
-      updateGolfTurnDisplay();
-    }
-
-    function undoGolfDart() {
-      const player = golfState.players[golfState.currentPlayerIndex];
-      if (player.currentHoleDarts.length > 0) { player.currentHoleDarts.pop(); updateGolfTurnDisplay(); }
-    }
-
-    function updateGolfTurnDisplay() {
-      const player = golfState.players[golfState.currentPlayerIndex];
-      const darts = player.currentHoleDarts;
-
-      document.getElementById('golf-dart-1').innerText = darts[0] ? `${darts[0].score} pt` : '-';
-      document.getElementById('golf-dart-2').innerText = darts[1] ? `${darts[1].score} pt` : '-';
-      document.getElementById('golf-dart-3').innerText = darts[2] ? `${darts[2].score} pt` : '-';
-
-      let bestScore = 5;
-      if (darts.length > 0) bestScore = Math.min(...darts.map(d => d.score));
-
-      const scoreLabelMap = { 1: '1 (Hole-in-One)', 2: '2 (Eagle)', 3: '3 (Birdie)', 4: '4 (Par)', 5: '5 (Bogey)' };
-      document.getElementById('golf-best-score').innerText = scoreLabelMap[bestScore];
-      document.getElementById('golf-btn-advance').disabled = darts.length < 3;
-    }
-
-    function advanceGolfTurn() {
-      const player = golfState.players[golfState.currentPlayerIndex];
-      const darts = player.currentHoleDarts;
-
-      const holeScore = darts.length > 0 ? Math.min(...darts.map(d => d.score)) : 5;
-      player.totalScore += holeScore;
-      player.holeScores.push(holeScore);
-      player.currentHoleDarts = [];
-
-      golfState.currentPlayerIndex++;
-      if (golfState.currentPlayerIndex >= golfState.players.length) {
-        golfState.currentPlayerIndex = 0;
-        golfState.currentHole++;
-      }
-
-      if (golfState.currentHole > golfState.totalHoles) {
-        const finalResults = [...golfState.players].sort((a, b) => a.totalScore - b.totalScore);
-        onEventFinished(finalResults);
-        return;
-      }
-
-      updateGolfUI();
-    }
-
-    function updateGolfUI() {
-      document.getElementById('golf-current-hole').innerText = golfState.currentHole;
-      document.getElementById('golf-total-holes').innerText = golfState.totalHoles;
-      document.getElementById('golf-target-segment').innerText = golfState.currentHole;
-
-      const player = golfState.players[golfState.currentPlayerIndex];
-      document.getElementById('golf-active-banner').innerText = `${player.name.toUpperCase()}'S TURN`;
-
-      updateGolfTurnDisplay();
-      renderGolfScoreboard();
-    }
-
-    function renderGolfScoreboard() {
-      const body = document.getElementById('golf-scoreboard-body');
-      body.innerHTML = '';
-      golfState.players.forEach(p => {
-        const lastHoleScore = p.holeScores.length > 0 ? p.holeScores[p.holeScores.length - 1] : '-';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><strong>${p.name}</strong></td><td><strong>${p.totalScore} pts</strong></td><td>${lastHoleScore}</td>`;
-        body.appendChild(tr);
-      });
-    }
-    const romanGameCard = document.getElementById('roman-game-card');
-
-function returnToDashboard() {
-    racetrackGameCard.classList.add('hidden');
-    basketballGameCard.classList.add('hidden');
-    golfGameCard.classList.add('hidden');
-    romanGameCard.classList.add('hidden'); // Add this line
-    eventResultCard.classList.add('hidden');
-    dashboardCard.classList.remove('hidden');
-    renderHubLeaderboard();
-}
-
-// Function to launch the game
-function launchRomanEmpire() {
-    const targetVal = parseInt(document.getElementById('roman-target-score').value) || 500;
-    document.getElementById('roman-target-display').innerText = targetVal;
-    
-    dashboardCard.classList.add('hidden');
-    romanGameCard.classList.remove('hidden');
-    // Initialize your game state here...
-}
-  </script>
+</script>
 </body>
 </html>
