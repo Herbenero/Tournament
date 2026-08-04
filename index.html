@@ -286,45 +286,53 @@
         <button class="btn" onclick="startTournament()">🚀 Confirm Setup & Launch Hub</button>
     </div>
 
-    <!-- 3. EMBEDDED GAME ENGINE: ROBIN HOOD DARTS -->
-    <div id="robinhood-game-card" class="card hidden">
-        <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
-        <h2>🏹 Robin Hood Darts 🏹</h2>
-        <div class="game-header">
-            <div>Round: <span id="rh-round-num">1</span> / <span id="rh-max-rounds">10</span></div>
-            <div>Target Segment: <strong style="color: var(--accent-color);" id="rh-target-segment">20</strong></div>
-        </div>
-        <div id="rh-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
+    <!-- EMBEDDED GAME ENGINE: ROBIN HOOD DARTS -->
+<div id="robinhood-game-card" class="card hidden">
+  <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
+  <h2>🏹 Robin Hood Darts 🏹</h2>
+  
+  <div class="game-header">
+    <div>Round: <span id="rh-round-num">1</span> / <span id="rh-max-rounds">10</span></div>
+    <div>Target Segment: <strong style="color: var(--accent-color);" id="rh-target-segment">20</strong></div>
+  </div>
 
-        <div class="dart-display-container">
-            <div class="dart-display">
-                <div class="dart-box" id="rh-dart-1">-</div>
-                <div class="dart-box" id="rh-dart-2">-</div>
-                <div class="dart-box" id="rh-dart-3">-</div>
-            </div>
-            <div class="turn-total">Turn Score: <span id="rh-turn-score">0</span></div>
-        </div>
+  <div id="rh-active-banner" class="active-player-banner">PLAYER 1's TURN</div>
 
-        <div class="controls-grid">
-            <button class="btn-pad modifier" id="rh-btn-double" onclick="setRHModifier('double')">DOUBLE</button>
-            <button class="btn-pad modifier" id="rh-btn-triple" onclick="setRHModifier('triple')">TRIPLE</button>
-            <button class="btn-pad action" id="rh-btn-robin" style="background: #9c27b0;" onclick="recordRHDart('robin', 50)">ROBIN HOOD (50)</button>
-            <button class="btn-pad action" id="rh-btn-miss" onclick="recordRHDart('miss', 0)">MISS (0)</button>
-            <button class="btn-pad action" id="rh-btn-undo" style="background:#d32f2f;" onclick="undoRHDart()">UNDO</button>
-            <div id="rh-number-buttons" style="display: contents;"></div>
-        </div>
-
-        <button class="btn advance-btn" id="rh-btn-advance" disabled onclick="advanceRobinHoodTurn()">Advance Turn ➡️</button>
-
-        <h3 style="margin-top:25px;">Robin Hood Leaderboard</h3>
-        <table>
-            <thead>
-                <tr><th>Player</th><th>Total Points</th><th>Bullseye / Robin Hits</th></tr>
-            </thead>
-            <tbody id="rh-scoreboard-body"></tbody>
-        </table>
+  <div class="dart-display-container">
+    <div class="dart-display">
+      <div class="dart-box" id="rh-dart-1">-</div>
+      <div class="dart-box" id="rh-dart-2">-</div>
+      <div class="dart-box" id="rh-dart-3">-</div>
     </div>
+    <div class="turn-total">Turn Score: <span id="rh-turn-score">0</span></div>
+  </div>
 
+  <div class="controls-grid">
+    <button class="btn-pad modifier" id="rh-btn-double" onclick="toggleRobinModifier('double')">DOUBLE</button>
+    <button class="btn-pad modifier" id="rh-btn-triple" onclick="toggleRobinModifier('triple')">TRIPLE</button>
+    <button class="btn-pad action" id="rh-btn-robin" style="background: #9c27b0;" onclick="recordRobinDart('ROBIN')">ROBIN HOOD (50)</button>
+    <button class="btn-pad action" id="rh-btn-miss" onclick="recordRobinDart('MISS')">MISS (0)</button>
+    <button class="btn-pad action" id="rh-btn-undo" style="background:#d32f2f;" onclick="undoRobinDart()">UNDO</button>
+    <div id="rh-number-buttons" style="display: contents;">
+      <!-- Generated dynamically or listed 1-20 + Bull -->
+    </div>
+  </div>
+
+  <button class="btn advance-btn" id="rh-btn-advance" disabled onclick="advanceRobinHoodTurn()">Advance Turn ➡️</button>
+
+  <h3 style="margin-top:25px;">Robin Hood Leaderboard</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Player</th>
+        <th>Total Points</th>
+        <th>Robin Hood Hits</th>
+      </tr>
+    </thead>
+    <tbody id="rh-scoreboard-body"></tbody>
+  </table>
+</div>
     <!-- 4. EMBEDDED GAME ENGINE: ROMAN EMPIRE -->
     <div id="roman-game-card" class="card hidden">
         <button class="btn" style="background: #444; color: #fff; margin-bottom: 15px;" onclick="returnToDashboard()">🏠 Back to Hub</button>
@@ -449,186 +457,200 @@
         renderHubLeaderboard();
     }
 
-    // --- ROBIN HOOD GAME ENGINE ---
-    const RH_SEGMENTS = [20, 19, 18, 17, 16, 15, 14, 13, 12, 11];
-    let rhState = {
-        players: [],
-        currentRound: 1,
-        maxRounds: 10,
-        currentPlayerIndex: 0,
-        darts: [],
-        activeModifier: null, // 'double' | 'triple' | null
-        history: []
-    };
+    // --- ROBIN HOOD GAME STATE ---
+let rhPlayers = [];
+let rhCurrentPlayerIdx = 0;
+let rhCurrentRound = 1;
+const rhMaxRounds = 10;
+let rhCurrentDarts = [];
+let rhActiveModifier = null; // 'double' | 'triple' | null
 
-    function launchRobinHood() {
-        rhState.players = players.map(name => ({
-            name: name,
-            totalPoints: 0,
-            specialHits: 0
-        }));
+// Target segment rotation schedule per round
+const rhRoundTargets = [20, 19, 18, 17, 16, 15, 14, 13, 12, "BULL"];
 
-        rhState.currentRound = 1;
-        rhState.maxRounds = RH_SEGMENTS.length;
-        rhState.currentPlayerIndex = 0;
-        rhState.darts = [];
-        rhState.activeModifier = null;
-        rhState.history = [];
+function initRobinHoodGame(playerList) {
+  rhPlayers = playerList.map(name => ({
+    name: name,
+    totalScore: 0,
+    robinHits: 0,
+    roundScores: Array(rhMaxRounds).fill(0)
+  }));
+  rhCurrentPlayerIdx = 0;
+  rhCurrentRound = 1;
+  rhCurrentDarts = [];
+  rhActiveModifier = null;
 
-        dashboardCard.classList.add('hidden');
-        robinhoodGameCard.classList.remove('hidden');
+  renderRobinHoodKeypad();
+  updateRobinHoodUI();
+}
 
-        renderRHNumberButtons();
-        updateRHUI();
+function renderRobinHoodKeypad() {
+  const container = document.getElementById("rh-number-buttons");
+  if (!container) return;
+  container.innerHTML = "";
+
+  // Target buttons logic: Highlight active round target or general numbers
+  const targetSeg = rhRoundTargets[rhCurrentRound - 1];
+  
+  for (let i = 1; i <= 20; i++) {
+    const btn = document.createElement("button");
+    btn.className = "btn-pad";
+    btn.textContent = i;
+    btn.onclick = () => recordRobinDart(i);
+    container.appendChild(btn);
+  }
+
+  const bullBtn = document.createElement("button");
+  bullBtn.className = "btn-pad action";
+  bullBtn.style.background = "#2e7d32";
+  bullBtn.textContent = "BULL (25/50)";
+  bullBtn.onclick = () => recordRobinDart("BULL");
+  container.appendChild(bullBtn);
+}
+
+function toggleRobinModifier(mod) {
+  if (rhActiveModifier === mod) {
+    rhActiveModifier = null;
+  } else {
+    rhActiveModifier = mod;
+  }
+  
+  document.getElementById("rh-btn-double").classList.toggle("active", rhActiveModifier === 'double');
+  document.getElementById("rh-btn-triple").classList.toggle("active", rhActiveModifier === 'triple');
+}
+
+function recordRobinDart(val) {
+  if (rhCurrentDarts.length >= 3) return;
+
+  let pts = 0;
+  let label = "";
+  const target = rhRoundTargets[rhCurrentRound - 1];
+
+  if (val === "ROBIN") {
+    pts = 50;
+    label = "ROBIN! (50)";
+  } else if (val === "MISS") {
+    pts = 0;
+    label = "MISS";
+  } else if (val === "BULL") {
+    if (rhActiveModifier === "double") {
+      pts = 50;
+      label = "D-BULL (50)";
+    } else {
+      pts = 25;
+      label = "S-BULL (25)";
     }
+  } else {
+    let multiplier = 1;
+    if (rhActiveModifier === "double") multiplier = 2;
+    if (rhActiveModifier === "triple") multiplier = 3;
 
-    function renderRHNumberButtons() {
-        const container = document.getElementById('rh-number-buttons');
-        container.innerHTML = '';
-
-        // Target segment button
-        const targetSeg = RH_SEGMENTS[rhState.currentRound - 1];
-        const btn = document.createElement('button');
-        btn.className = 'btn-pad';
-        btn.style.background = '#4caf50';
-        btn.innerText = `HIT (${targetSeg})`;
-        btn.onclick = () => recordRHDart('target', targetSeg);
-        container.appendChild(btn);
-
-        // Bullseye button
-        const bullBtn = document.createElement('button');
-        bullBtn.className = 'btn-pad';
-        bullBtn.style.background = '#e91e63';
-        bullBtn.innerText = 'BULL (25/50)';
-        bullBtn.onclick = () => recordRHDart('bull', 25);
-        container.appendChild(bullBtn);
+    // Check if dart hit target segment for full points or non-target segment
+    if (val === target) {
+      pts = val * multiplier;
+      label = `${rhActiveModifier ? rhActiveModifier.toUpperCase() + " " : ""}${val} (${pts})`;
+    } else {
+      // Off-target scoring rule options
+      pts = 0; 
+      label = `OFF TARGET (${val})`;
     }
+  }
 
-    function setRHModifier(mod) {
-        if (rhState.activeModifier === mod) {
-            rhState.activeModifier = null;
-        } else {
-            rhState.activeModifier = mod;
-        }
+  rhCurrentDarts.push({ pts, label, val });
+  rhActiveModifier = null;
+  document.getElementById("rh-btn-double").classList.remove("active");
+  document.getElementById("rh-btn-triple").classList.remove("active");
 
-        document.getElementById('rh-btn-double').classList.toggle('active', rhState.activeModifier === 'double');
-        document.getElementById('rh-btn-triple').classList.toggle('active', rhState.activeModifier === 'triple');
-    }
+  updateRobinHoodUI();
+}
 
-    function recordRHDart(type, baseVal) {
-        if (rhState.darts.length >= 3) return;
+function undoRobinDart() {
+  if (rhCurrentDarts.length > 0) {
+    rhCurrentDarts.pop();
+    updateRobinHoodUI();
+  }
+}
 
-        let multiplier = 1;
-        if (rhState.activeModifier === 'double') multiplier = 2;
-        if (rhState.activeModifier === 'triple') multiplier = 3;
+function advanceRobinHoodTurn() {
+  const turnScore = rhCurrentDarts.reduce((sum, d) => sum + d.pts, 0);
+  const robinsThisTurn = rhCurrentDarts.filter(d => d.val === "ROBIN").length;
 
-        let points = 0;
-        let isSpecial = false;
+  const player = rhPlayers[rhCurrentPlayerIdx];
+  player.totalScore += turnScore;
+  player.robinHits += robinsThisTurn;
+  player.roundScores[rhCurrentRound - 1] = turnScore;
 
-        if (type === 'target') {
-            points = baseVal * multiplier;
-        } else if (type === 'bull') {
-            points = (rhState.activeModifier === 'double') ? 50 : 25;
-            isSpecial = true;
-        } else if (type === 'robin') {
-            points = 50;
-            isSpecial = true;
-        } else if (type === 'miss') {
-            points = 0;
-        }
+  rhCurrentDarts = [];
 
-        rhState.history.push(JSON.stringify({
-            players: JSON.parse(JSON.stringify(rhState.players)),
-            darts: [...rhState.darts]
-        }));
+  // Rotation through players and rounds
+  rhCurrentPlayerIdx++;
+  if (rhCurrentPlayerIdx >= rhPlayers.length) {
+    rhCurrentPlayerIdx = 0;
+    rhCurrentRound++;
+  }
 
-        rhState.darts.push({ points, isSpecial, text: `${points} pts` });
-        rhState.players[rhState.currentPlayerIndex].totalPoints += points;
-        if (isSpecial) rhState.players[rhState.currentPlayerIndex].specialHits++;
+  if (rhCurrentRound > rhMaxRounds) {
+    finishRobinHoodEvent();
+  } else {
+    renderRobinHoodKeypad();
+    updateRobinHoodUI();
+  }
+}
 
-        setRHModifier(null);
-        updateRHUI();
-    }
+function updateRobinHoodUI() {
+  const target = rhRoundTargets[rhCurrentRound - 1] || "END";
+  document.getElementById("rh-round-num").textContent = rhCurrentRound;
+  document.getElementById("rh-target-segment").textContent = target;
 
-    function undoRHDart() {
-        if (rhState.history.length === 0) return;
-        const last = JSON.parse(rhState.history.pop());
-        rhState.players = last.players;
-        rhState.darts = last.darts;
-        setRHModifier(null);
-        updateRHUI();
-    }
+  const player = rhPlayers[rhCurrentPlayerIdx];
+  if (player) {
+    document.getElementById("rh-active-banner").textContent = `${player.name.toUpperCase()}'S TURN`;
+  }
 
-    function advanceRobinHoodTurn() {
-        if (rhState.darts.length === 0) return;
+  // Display darts
+  for (let i = 1; i <= 3; i++) {
+    const dartBox = document.getElementById(`rh-dart-${i}`);
+    const dart = rhCurrentDarts[i - 1];
+    dartBox.textContent = dart ? dart.label : "-";
+  }
 
-        rhState.darts = [];
-        rhState.history = [];
-        rhState.currentPlayerIndex++;
+  const turnScore = rhCurrentDarts.reduce((sum, d) => sum + d.pts, 0);
+  document.getElementById("rh-turn-score").textContent = turnScore;
 
-        if (rhState.currentPlayerIndex >= rhState.players.length) {
-            rhState.currentPlayerIndex = 0;
-            rhState.currentRound++;
-        }
+  // Enable/disable advance button
+  document.getElementById("rh-btn-advance").disabled = rhCurrentDarts.length !== 3;
 
-        if (rhState.currentRound > rhState.maxRounds) {
-            finishRobinHood();
-            return;
-        }
+  renderRobinHoodScoreboard();
+}
 
-        renderRHNumberButtons();
-        updateRHUI();
-    }
+function renderRobinHoodScoreboard() {
+  const tbody = document.getElementById("rh-scoreboard-body");
+  if (!tbody) return;
 
-    function updateRHUI() {
-        const targetSeg = RH_SEGMENTS[rhState.currentRound - 1];
-        document.getElementById('rh-round-num').innerText = rhState.currentRound;
-        document.getElementById('rh-max-rounds').innerText = rhState.maxRounds;
-        document.getElementById('rh-target-segment').innerText = targetSeg;
+  // Sort players by total score
+  const sorted = [...rhPlayers].sort((a, b) => b.totalScore - a.totalScore);
 
-        const activePlayer = rhState.players[rhState.currentPlayerIndex];
-        document.getElementById('rh-active-banner').innerText = `${activePlayer.name.toUpperCase()}'S TURN`;
+  tbody.innerHTML = sorted.map((p, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><strong>${p.name}</strong></td>
+      <td>${p.totalScore}</td>
+      <td>${p.robinHits}</td>
+    </tr>
+  `).join("");
+}
 
-        // Render Darts
-        for (let i = 1; i <= 3; i++) {
-            const box = document.getElementById(`rh-dart-${i}`);
-            box.innerText = rhState.darts[i - 1] ? rhState.darts[i - 1].text : '-';
-        }
-
-        const turnTotal = rhState.darts.reduce((sum, d) => sum + d.points, 0);
-        document.getElementById('rh-turn-score').innerText = turnTotal;
-
-        document.getElementById('rh-btn-advance').disabled = rhState.darts.length === 0;
-
-        // Scoreboard
-        const tbody = document.getElementById('rh-scoreboard-body');
-        tbody.innerHTML = '';
-        rhState.players.forEach(p => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td><strong>${p.name}</strong></td><td>${p.totalPoints}</td><td>${p.specialHits}</td>`;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function finishRobinHood() {
-        const sorted = [...rhState.players].sort((a, b) => b.totalPoints - a.totalPoints);
-
-        // Award Olympic points
-        sorted.forEach((item, rank) => {
-            const pts = Math.max(10 - rank * 2, 2);
-            overallStandings[item.name] = (overallStandings[item.name] || 0) + pts;
-        });
-
-        robinhoodGameCard.classList.add('hidden');
-        eventResultCard.classList.remove('hidden');
-
-        let html = '<h3>Robin Hood Final Results</h3><ol>';
-        sorted.forEach(s => {
-            html += `<li><strong>${s.name}</strong>: ${s.totalPoints} pts (${s.specialHits} Special Hits)</li>`;
-        });
-        html += '</ol>';
-        document.getElementById('event-rankings-display').innerHTML = html;
-    }
+function finishRobinHoodEvent() {
+  // Sort players to determine final placements & awarded Olympic Points
+  const finalStandings = [...rhPlayers].sort((a, b) => b.totalScore - a.totalScore);
+  
+  // Hand off results to the Hub Dashboard function
+  if (typeof recordEventResults === "function") {
+    recordEventResults("robinhood", finalStandings);
+  } else {
+    returnToDashboard();
+  }
+}
 </script>
 </body>
 </html>
